@@ -11,6 +11,11 @@ class UserEmailController extends UserBaseController
 
     }
 
+    /**
+     * 邮箱注册
+     * @author mohuishou<1@lailin.xyz>
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function register()
     {
         $this->validate($this->_request, [
@@ -33,6 +38,12 @@ class UserEmailController extends UserBaseController
     }
 
 
+    /**
+     * 邮箱验证
+     * @author mohuishou<1@lailin.xyz>
+     * @param $verify_code
+     * @return \Laravel\Lumen\Http\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function verify($verify_code){
         //从缓存当中取出验证码并且删除
         $uid=Cache::pull($verify_code);
@@ -44,7 +55,7 @@ class UserEmailController extends UserBaseController
                 return $this->success('邮件验证成功，绑定教务处（可跳过）');
             }
         };
-        return $this->errorRequest('邮件验证码错误！');
+        return $this->errorRequest(['verify_code'=>'邮件验证码错误或者已经过期！']);
     }
 
 

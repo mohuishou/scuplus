@@ -28,6 +28,12 @@ class Controller extends BaseController
         return response()->json($msg,422);
     }
 
+    /**
+     * @author mohuishou<1@lailin.xyz>
+     * @param $msg
+     * @param array $data
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function success($msg,$data=[]){
         $success=[
             'status'=>1,

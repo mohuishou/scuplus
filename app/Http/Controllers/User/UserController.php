@@ -61,6 +61,22 @@ class UserController extends Controller
         };
     }
 
+    public function verify($type,$verify_code){
+        if(!is_numeric($type))
+            return $this->errorRequest(['type'=>'注册类型错误，type必须为数字']);
+
+        if(strlen($verify_code)!=32)
+            return $this->errorRequest(['verify_code'=>'验证码参数错误！']);
+
+        $user_type=$this->userType($type);
+
+        if($user_type){
+            return $user_type->verify($verify_code);
+        }else{
+            return $this->errorRequest(['type'=>'不存在该类型']);
+        }
+    }
+
 
     public function login(){
 

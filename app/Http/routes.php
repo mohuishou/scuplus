@@ -22,7 +22,7 @@ $app->group(['namespace'=>'App\Http\Controllers\User','prefix'=>BASE],function (
 
     $app->get('/register/{type}/verify/{verify_code}',[
         'as'=>'user.verify',
-        'uses'=>'UserEmailController@verify'
+        'uses'=>'UserController@verify'
     ]);
 
 });
