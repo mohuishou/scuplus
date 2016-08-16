@@ -61,6 +61,13 @@ class UserController extends Controller
         };
     }
 
+    /**
+     * 验证，验证邮箱或者手机号，或者其他第三方平台
+     * @author mohuishou<1@lailin.xyz>
+     * @param $type
+     * @param $verify_code
+     * @return \Laravel\Lumen\Http\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function verify($type,$verify_code){
         if(!is_numeric($type))
             return $this->errorRequest(['type'=>'注册类型错误，type必须为数字']);

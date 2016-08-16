@@ -2,7 +2,7 @@
 namespace App\Http\Controllers\User;
 use App\Http\Controllers;
 
-class RegisterController extends Controller
+class UserInfoController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -14,11 +14,7 @@ class RegisterController extends Controller
         //
     }
 
-    public function email(){
-
-    }
-
-    public function emailVerify(){
+    public function bindJwc(){
 
     }
 

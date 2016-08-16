@@ -41,7 +41,7 @@ class UserEmailController extends UserBaseController
         });
 
         if($res){
-            return $this->success('注册成功，等待验证邮箱！',['url'=>$verify_url]);
+            return $this->success('注册成功，验证邮件已发送，等待验证邮箱！');
         }
 
     }
@@ -59,7 +59,8 @@ class UserEmailController extends UserBaseController
         if($uid){
             $user=User::find($uid);
             $user->email_verify=1;
-            //Todo: 生成绑定教务处的链接
+            //Todo: 生成绑定教务处的链接,生成token
+            $token=$this->creatToken($user);
             if($user->save()){
                 return $this->success('邮件验证成功，绑定教务处（可跳过）');
             }
