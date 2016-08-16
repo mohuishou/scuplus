@@ -35,7 +35,7 @@ abstract class UserBaseController extends Controller
             'time'=>60*2 //有效时间2小时
         ];
         $token_str=json_encode($token_arr);
-        $token=encrypt($token_str);
+        $token=sha1($token_str);
         Cache::put($token,$user->id,60*2);
         return $token;
     }

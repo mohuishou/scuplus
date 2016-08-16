@@ -85,7 +85,16 @@ class UserController extends Controller
     }
 
 
-    public function login(){
+    public function login($type){
+        if(!is_numeric($type))
+            return $this->errorRequest(['type'=>'注册类型错误，type必须为数字']);
 
+        $user_type=$this->userType($type);
+
+        if($user_type){
+            return $user_type->login();
+        }else{
+            return $this->errorRequest(['type'=>'不存在该类型']);
+        }
     }
 }

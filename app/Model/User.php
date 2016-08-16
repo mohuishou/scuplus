@@ -32,4 +32,8 @@ class User extends BaseModel implements
     protected $hidden = [
         'password',
     ];
+
+    public function userinfo(){
+        return $this->hasOne('App\Model\UserInfo','uid');
+    }
 }

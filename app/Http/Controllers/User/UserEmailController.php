@@ -9,8 +9,22 @@ class UserEmailController extends UserBaseController
 {
 
 
-    public function login(){
 
+    public function login(){
+        $this->validate($this->_request, [
+            'password' => 'required|min:32|max:32',  //只接受md5加密的密码字符串
+            'email' => 'required|email',
+        ]);
+        $user=User::where('email',$this->_request->input('email'))
+            ->where('password',sha1($this->_request->input('password')))
+            ->first();
+//        return sha1($this->_request->input('password'));
+        if(empty($user)){
+            return $this->errorRequest(['error'=>'用户名或密码错误']);
+        }
+
+        $token=$this->creatToken($user);
+        return $this->success('登陆成功！',['token'=>$token]);
     }
 
     /**
@@ -22,10 +36,14 @@ class UserEmailController extends UserBaseController
     {
         $this->validate($this->_request, [
             'username' => 'required|unique:user|max:10',
-            'password' => 'required|min:6|max:20',
-            'email' => 'required|email',
+            'password' => 'required|min:32|max:32',  //只接受md5加密的密码字符串
+            'email' => 'required|email|unique:user',
         ]);
-        $user=User::create($this->_request->all());
+        $user=new User();
+        $user->email=$this->_request->input('email');
+        $user->username=$this->_request->input('username');
+        $user->password=sha1($this->_request->input('password'));
+        $user->save();
 
         $verify_code=md5($user->email);
         Cache::put($verify_code, $user->id, 60*24);//验证码24小时有效
@@ -62,7 +80,7 @@ class UserEmailController extends UserBaseController
             //Todo: 生成绑定教务处的链接,生成token
             $token=$this->creatToken($user);
             if($user->save()){
-                return $this->success('邮件验证成功，绑定教务处（可跳过）');
+                return $this->success('邮件验证成功，绑定教务处（可跳过）',['token',$token]);
             }
         };
         return $this->errorRequest(['verify_code'=>'邮件验证码错误或者已经过期！']);

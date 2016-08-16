@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\User;
+use App\Model\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
