@@ -1,7 +1,9 @@
 <?php
 namespace App\Http\Controllers\User;
+use App\Jobs\EmailJob;
 use App\Model\User;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Mail;
 
 class UserEmailController extends UserBaseController
 {
@@ -26,15 +28,22 @@ class UserEmailController extends UserBaseController
         $user=User::create($this->_request->all());
 
         $verify_code=md5($user->email);
-        Cache::put($verify_code, $user->id, 120);//验证码2小时有效
+        Cache::put($verify_code, $user->id, 60*24);//验证码24小时有效
         $verify_url=route('user.verify',[
             'type'=>1,
             'verify_code'=>$verify_code
         ]);
 
-        //Todo: 发送含有验证码连接的邮件给用户
+        //发送含有验证码连接的邮件给用户
+        $this->dispatch(new EmailJob());
+        $res=Mail::queue('emails.emailVerify',['verify_url'=>$verify_url],function ($m) use($user){
+            $m->to($user->email)->subject('【Scuplus】注册验证');
+        });
 
-        return $this->success('注册成功，等待验证邮箱！',['url'=>$verify_url]);
+        if($res){
+            return $this->success('注册成功，等待验证邮箱！',['url'=>$verify_url]);
+        }
+
     }
 
 

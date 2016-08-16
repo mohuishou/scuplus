@@ -18,7 +18,7 @@ class ExampleController extends Controller
 
     public function emailTest(){
 
-//        $this->dispatch(new EmailJob());
+        $this->dispatch(new EmailJob());
         $a=Mail::send('emails.email',['testVar'=>123],function ($m){
             $b=$m->to('306755605@qq.com')->subject('测试');
 //            print_r($b);
