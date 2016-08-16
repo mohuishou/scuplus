@@ -11,9 +11,10 @@
 |
 */
 define("BASE",'/project/scuplus-5.2/public');
-$app->get(BASE.'/', function () use ($app) {
-    return $app->version();
-});
+$app->get(BASE.'/',[
+    'as'=>'email.test',
+    'uses'=>'EXampleController@emailTest'
+]);
 $app->group(['namespace'=>'App\Http\Controllers\User','prefix'=>BASE],function ($app){
     $app->post('/register/{type}',[
         'as'=>'user.register',
