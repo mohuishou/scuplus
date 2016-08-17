@@ -85,6 +85,12 @@ class UserController extends Controller
     }
 
 
+    /**
+     * 用户登录
+     * @author mohuishou<1@lailin.xyz>
+     * @param $type
+     * @return \Laravel\Lumen\Http\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function login($type){
         if(!is_numeric($type))
             return $this->errorRequest(['type'=>'注册类型错误，type必须为数字']);

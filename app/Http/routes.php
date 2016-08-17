@@ -15,6 +15,10 @@ $app->get(BASE.'/',[
     'as'=>'email.test',
     'uses'=>'EXampleController@emailTest'
 ]);
+
+/**
+ * 用户相关操作
+ */
 $app->group(['namespace'=>'App\Http\Controllers\User','prefix'=>BASE],function ($app){
     $app->post('/register/{type}',[
         'as'=>'user.register',
@@ -33,10 +37,15 @@ $app->group(['namespace'=>'App\Http\Controllers\User','prefix'=>BASE],function (
 
 });
 
+/**
+ * 教务处相关操作
+ */
 $app->group(['prefix'=>BASE.'/jwc','middleware' => 'auth'],function ($app){
     $app->post('/bind',[
         'as'=>'jwc.bind',
         'uses'=>'App\Http\Controllers\User\UserInfoController@bindJwc'
     ]);
 });
+
+
 
