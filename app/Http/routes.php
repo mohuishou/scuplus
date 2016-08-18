@@ -67,5 +67,15 @@ $app->group(['prefix'=>BASE.'/jwc','middleware' => 'auth','namespace' => 'App\Ht
         'as'=>'jwc.schedule.show',
         'uses'=>'ScheduleController@index'
     ]);
+
+    $app->post('/grade',[
+        'as'=>'jwc.grade.update',
+        'uses'=>'GradeController@update'
+    ]);
+
+    $app->get('/grade',[
+        'as'=>'jwc.grade.show',
+        'uses'=>'GradeController@index'
+    ]);
 });
 

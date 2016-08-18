@@ -14,6 +14,11 @@ use App\Model\Schedule;
 class ScheduleController extends JwcBaseController{
     protected $_jwc_name='Schedule';
 
+    /**
+     * 获取最新的课程表
+     * @author mohuishou<1@lailin.xyz>
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function index(){
         $term=$this->getTerm();
         if($this->_request->has('term')){
@@ -31,6 +36,11 @@ class ScheduleController extends JwcBaseController{
 
     }
 
+    /**
+     * 更新课程表
+     * @author mohuishou<1@lailin.xyz>
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function update(){
 
         $count=0;
@@ -62,12 +72,23 @@ class ScheduleController extends JwcBaseController{
             }
         }
 
+        //从数据库获取课程表信息
+        $data=Schedule::where('term',$term)->get();
+        foreach ($data as $k => &$v){
+            $v->course;
+            $v->course->teacher;
+        }
 
-        return $this->success('课程数据更新成功！更新'.$count.'门课程');
+
+        return $this->success('课程数据更新成功！更新'.$count.'门课程',$data);
     }
 
+    /**
+     * 计算当前学期，例如2016.1为2016-2017学年，秋季学期 2015.2 为 2015-2016学年，春季学期
+     * @author mohuishou<1@lailin.xyz>
+     * @return string
+     */
     private function getTerm(){
-        //计算当前学期，例如2016.1为2016-2017学年，秋季学期 2015.2 为 2015-2016学年，春季学期
         $year=date('Y');
         $month=date('m');
         if($month>6){
