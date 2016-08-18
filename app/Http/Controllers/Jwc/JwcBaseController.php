@@ -22,12 +22,16 @@ class JwcBaseController extends Controller{
      */
     protected $_jwc_name=null;
 
+    protected $_user;
+
     public function __construct(Request $request)
     {
         parent::__construct($request);
 
         $sid=$this->_request->user()->sid;
         $spassword=decrypt($this->_request->user()->spassword);
+
+        $this->_user=$this->_request->user();
 
         //初始化要操作的教务处类，默认为评教
         $this->_jwc_name || $this->_jwc_name='Evaluate';

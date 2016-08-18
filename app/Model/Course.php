@@ -19,14 +19,14 @@ class Course extends BaseModel{
     }
 
     public function evalute(){
-        $this->hasMany('App\Model\Evalute', 'cid');
+        return $this->hasMany('App\Model\Evalute', 'cid');
     }
 
     public function schedule(){
-        $this->hasMany('App\Model\Schedule', 'cid');
+        return $this->hasMany('App\Model\Schedule', 'cid');
     }
 
     public function grade(){
-        $this->hasMany('App\Model\Grade', 'cid');
+        return $this->hasMany('App\Model\Grade', 'cid');
     }
 }

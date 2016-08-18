@@ -20,7 +20,7 @@ class Schedule extends BaseModel
     }
 
     public function user(){
-        return $this->belongsTo('App\Model\User', 'uid');
+        return $this->belongsTo('App\Model\User','uid');
     }
 
 
