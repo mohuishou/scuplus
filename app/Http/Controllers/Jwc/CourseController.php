@@ -6,11 +6,19 @@
  * Time: 15:24
  */
 namespace App\Http\Controllers\Jwc;
-class CourseController extends JwcBaseControoler{
+
+use App\Jobs\CourseJob;
+
+class CourseController extends JwcBaseController{
     protected $_jwc_name='Course';
 
     public function index(){
-        return $this->_jwc_obj->index();
+        $res=$this->dispatch(new CourseJob($this->_request->user()->sid,decrypt($this->_request->user()->spassword)));
+        if($res){
+            return $this->success('课程信息更新任务已添加到后台队列！');
+        }
     }
+
+
 
 }

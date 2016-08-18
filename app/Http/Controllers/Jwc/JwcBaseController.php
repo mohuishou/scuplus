@@ -10,9 +10,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Mohuishou\Lib\ScuplusJwc;
 
-class JwcBaseControoler extends Controller{
+class JwcBaseController extends Controller{
 
+    /**
+     * @var string
+     */
     protected $_jwc_obj;
+
+    /**
+     * @var null|string
+     */
     protected $_jwc_name=null;
 
     public function __construct(Request $request)
@@ -24,10 +31,6 @@ class JwcBaseControoler extends Controller{
 
         //初始化要操作的教务处类，默认为评教
         $this->_jwc_name || $this->_jwc_name='Evaluate';
-        try{
-            $this->_jwc_obj=ScuplusJwc::create($this->_jwc_name,$sid,$spassword);
-        }catch (\Exception $e){
-            return $this->error(['error'=>$e]);
-        }
+        $this->_jwc_obj=ScuplusJwc::create($this->_jwc_name,$sid,$spassword);
     }
 }

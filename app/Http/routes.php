@@ -38,21 +38,24 @@ $app->group(['namespace'=>'App\Http\Controllers\User','prefix'=>BASE],function (
 });
 
 /**
- * 教务处相关操作
+ * 绑定教务处
  */
-$app->group(['prefix'=>BASE.'/jwc','middleware' => 'auth'],function ($app){
+$app->group(['prefix'=>BASE.'/jwc','middleware' => 'auth'],function () use($app){
     $app->post('/bind',[
         'as'=>'jwc.bind',
         'uses'=>'App\Http\Controllers\User\UserInfoController@bindJwc'
     ]);
 
-    $app->group(['namespace'=>'App\Http\Controllers\Jwc'],function ($app){
-        $app->post('/course',[
-            'as'=>'jwc.course',
-            'uses'=>'CourseController@index'
-        ]);
-    });
+
 });
 
-
+/**
+ * 教务处相关操作
+ */
+$app->group(['prefix'=>BASE.'/jwc','middleware' => 'auth','namespace' => 'App\Http\Controllers\Jwc'], function() use ($app) {
+    $app->post('/course',[
+        'as'=>'jwc.course',
+        'uses'=>'CourseController@index'
+    ]);
+});
 
