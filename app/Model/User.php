@@ -36,4 +36,16 @@ class User extends BaseModel implements
     public function userinfo(){
         return $this->hasOne('App\Model\UserInfo','uid');
     }
+
+    public function evalute(){
+        $this->hasMany('App\Model\Evalute', 'uid');
+    }
+
+    public function schedule(){
+        $this->hasMany('App\Model\Schedule', 'uid');
+    }
+
+    public function grade(){
+        $this->hasMany('App\Model\Grade', 'uid');
+    }
 }

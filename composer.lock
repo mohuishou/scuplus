@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1805e8db0bcec38d155102536e7737d8",
-    "content-hash": "b68a8a4eaac71c1cebe534935820a71e",
+    "hash": "37f795c575e1ebca8cef95c24d049ea7",
+    "content-hash": "fba3a2d2af3dc1f725692d4fa4a85b51",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -1590,16 +1590,16 @@
         },
         {
             "name": "mohuishou/scuplus-jwc-package",
-            "version": "0.1.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mohuishou/scuplus-jwc-package.git",
-                "reference": "76e24acb4544676de15d4f83fc3397388362afaa"
+                "reference": "69383e0104e730c3c6042b13f27d97f3dee1a749"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packagist.phpcomposer.com/files/mohuishou/scuplus-jwc-package/76e24acb4544676de15d4f83fc3397388362afaa.zip",
-                "reference": "76e24acb4544676de15d4f83fc3397388362afaa",
+                "url": "https://packagist.phpcomposer.com/files/mohuishou/scuplus-jwc-package/69383e0104e730c3c6042b13f27d97f3dee1a749.zip",
+                "reference": "69383e0104e730c3c6042b13f27d97f3dee1a749",
                 "shasum": ""
             },
             "require": {
@@ -1630,7 +1630,7 @@
                 "四川大学教务处",
                 "教务处"
             ],
-            "time": "2016-08-07 06:17:28"
+            "time": "2016-08-17 05:35:55"
         },
         {
             "name": "monolog/monolog",
@@ -3988,7 +3988,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "mohuishou/scuplus-jwc-package": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

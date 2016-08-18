@@ -11,7 +11,7 @@
         "illuminate/mail": "^5.2",
         "guzzlehttp/guzzle": "^6.2",
         "jeremeamia/SuperClosure": "^2.2",
-        "mohuishou/scuplus-jwc-package": "^0.1.0"
+        "mohuishou/scuplus-jwc-package": "dev-master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
