@@ -45,6 +45,13 @@ $app->group(['prefix'=>BASE.'/jwc','middleware' => 'auth'],function ($app){
         'as'=>'jwc.bind',
         'uses'=>'App\Http\Controllers\User\UserInfoController@bindJwc'
     ]);
+
+    $app->group(['namespace'=>'App\Http\Controllers\Jwc'],function ($app){
+        $app->post('/course',[
+            'as'=>'jwc.course',
+            'uses'=>'CourseController@index'
+        ]);
+    });
 });
 
 

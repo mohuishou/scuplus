@@ -28,6 +28,11 @@ class Controller extends BaseController
         return response()->json($msg,422);
     }
 
+
+    public function error($msg){
+        return response()->json($msg,400);
+    }
+
     /**
      * @author mohuishou<1@lailin.xyz>
      * @param $msg

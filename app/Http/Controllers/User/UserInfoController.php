@@ -19,6 +19,8 @@ class UserInfoController extends Controller
             'spassword' => 'required|min:6|max:20',
         ]);
 
+        return $this->success($this->_request->user());
+
         $sid=$this->_request->input('sid');
         $spassword=$this->_request->input('spassword');
         try{

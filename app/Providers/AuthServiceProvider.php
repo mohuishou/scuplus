@@ -37,8 +37,6 @@ class AuthServiceProvider extends ServiceProvider
                 $uid=Cache::get($request->input('token'));
                 if($uid){
                     return User::find($uid);
-                }else{
-                    return false;
                 }
             }
         });
