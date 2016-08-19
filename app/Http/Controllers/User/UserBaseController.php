@@ -51,7 +51,7 @@ abstract class UserBaseController extends Controller
         if($uid){
             return $this->creatToken(User::find($uid));
         }
-        return $this->errorRequest(['token'=>"不存在该token"]);
+        return false;
     }
 
 

@@ -111,6 +111,23 @@ class UserController extends Controller
 
 
     /**
+     * 刷新token
+     * @author mohuishou<1@lailin.xyz>
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function refreshToken(){
+        $token=$this->_request->input('token');
+        $user_type=$this->userType(1);
+        $res=$user_type->refreshToken($token);
+        if($res){
+            return $this->success('token更新成功！',['token'=>$token]);
+        }else{
+            return $this->error(['error'=>'token更新失败']);
+        }
+    }
+
+
+    /**
      * 用户登录
      * @author mohuishou<1@lailin.xyz>
      * @param $type

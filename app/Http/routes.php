@@ -52,6 +52,10 @@ $app->group(['middleware' => 'auth'],function () use($app){
         'uses'=>'App\Http\Controllers\User\UserInfoController@index'
     ]);
 
+    $app->get('/token/refresh',[
+        'as'=>'user.token.refresh',
+        'uses'=>'App\Http\Controllers\User\UserController@refreshToken'
+    ]);
 
 
 
