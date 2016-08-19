@@ -11,10 +11,9 @@
 |
 */
 //define("BASE",'/project/scuplus-5.2/public');
-$app->get('/',[
-    'as'=>'email.test',
-    'uses'=>'EXampleController@emailTest'
-]);
+$app->get('/',function (){
+    return response()->json('welcome to scuplus api');
+});
 
 /**
  * 用户相关操作
@@ -28,6 +27,11 @@ $app->group(['namespace'=>'App\Http\Controllers\User'],function ($app){
     $app->get('/register/{type}/verify/{verify_code}',[
         'as'=>'user.verify',
         'uses'=>'UserController@verify'
+    ]);
+
+    $app->post('/verify/resend/{type}',[
+        'as'=>'user.verify.resend',
+        'uses'=>'UserController@resendVerify'
     ]);
 
     $app->post('/login/{type}',[

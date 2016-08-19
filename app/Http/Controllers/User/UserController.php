@@ -80,10 +80,30 @@ class UserController extends Controller
         if($user_type){
             $res=$user_type->verify($verify_code);
             if($res){
-                return redirect('http"//scuplus.cn/login.html');
+                return redirect('http://scuplus.cn/login.html');
             }else{
                 return $this->errorRequest(['verify_code'=>'验证码错误或已经失效！']);
             }
+        }else{
+            return $this->errorRequest(['type'=>'不存在该类型']);
+        }
+    }
+
+
+    /**
+     * 再次发送验证邮件或短信
+     * @author mohuishou<1@lailin.xyz>
+     * @param $type
+     * @return \Laravel\Lumen\Http\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
+    public function resendVerify($type){
+        if(!is_numeric($type))
+            return $this->errorRequest(['type'=>'类型错误，type必须为数字']);
+
+        $user_type=$this->userType($type);
+
+        if($user_type){
+            return $user_type->resendVerify();
         }else{
             return $this->errorRequest(['type'=>'不存在该类型']);
         }

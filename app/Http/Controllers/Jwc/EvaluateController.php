@@ -21,7 +21,7 @@ class EvaluateController extends Controller{
         $this->validate($this->_request, [
             'cid' => 'required|numeric',
             'tid' => 'required|numeric',
-            'stars' => 'required|numeric',
+            'stars' => 'required|numeric|min:0|max:5',
             'message' => 'required|max:200|min:6',
         ]);
 
@@ -82,7 +82,7 @@ class EvaluateController extends Controller{
     public function update(){
         $this->validate($this->_request, [
             'id'=>'required|numeric',   //evaluate_info的id
-            'stars' => 'required|numeric',
+            'stars' => 'required|numeric|min:0|max:5',
             'message' => 'required|max:200|min:6',
         ]);
 

@@ -49,8 +49,47 @@ class UserEmailController extends UserBaseController
         $user->password=sha1($this->_request->input('password'));
         $user->save();
 
-        $verify_code=md5($user->email);
-        Cache::put($verify_code, $user->id, 60*24);//验证码24小时有效
+        $res=$this->sendVerifyEmail($user->email,$user->id);
+
+
+        if($res){
+            return $this->success('注册成功，验证邮件已发送，等待验证邮箱！');
+        }
+
+    }
+
+
+    /**
+     * 重新发送验证邮件
+     * @author mohuishou<1@lailin.xyz>
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function resendVerify(){
+        $this->validate($this->_request, [
+            'email' => 'required|email|exists:user',
+        ]);
+        $email=$this->_request->input('email');
+        $user=User::where('email',$email)->first();
+        if($user->email_verify){
+            return $this->error(['error'=>'该邮箱已验证!,请直接登录']);
+        }
+        $res=$this->sendVerifyEmail($email,$user->id);
+        if($res){
+            return $this->success('验证邮件已再次发送，等待验证邮箱！');
+        }
+    }
+
+
+    /**
+     * 发送验证邮件
+     * @author mohuishou<1@lailin.xyz>
+     * @param $email
+     * @param $uid
+     * @return mixed
+     */
+    public function sendVerifyEmail($email,$uid){
+        $verify_code=md5($email);
+        Cache::put($verify_code, $uid, 60*24);//验证码24小时有效
         $verify_url=route('user.verify',[
             'type'=>1,
             'verify_code'=>$verify_code
@@ -58,14 +97,11 @@ class UserEmailController extends UserBaseController
 
         //发送含有验证码连接的邮件给用户
         $this->dispatch(new EmailJob());
-        $res=Mail::queue('emails.emailVerify',['verify_url'=>$verify_url],function ($m) use($user){
-            $m->to($user->email)->subject('【Scuplus】注册验证');
+        $res=Mail::queue('emails.emailVerify',['verify_url'=>$verify_url],function ($m) use($email){
+            $m->to($email)->subject('【Scuplus】注册验证');
         });
 
-        if($res){
-            return $this->success('注册成功，验证邮件已发送，等待验证邮箱！');
-        }
-
+        return $res;
     }
 
 
