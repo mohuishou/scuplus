@@ -3,6 +3,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class UserController extends Controller
 {
@@ -142,6 +143,41 @@ class UserController extends Controller
         return $this->error(['error'=>'密码修改失败！']);
     }
 
+    /**
+     * 重置密码
+     * @author mohuishou<1@lailin.xyz>
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function resetPassword($verify_code){
+        $uid=Cache::pull($verify_code);
+        if($uid){
+            $user=User::find($uid);
+            $user_type=$this->userType(1);
+            $token=$user_type->creatToken($user);
+            return redirect('http://scuplus.cn/resetPassword?token='.$token); //暂时设置为这个地址
+        }else{
+            return response("验证错误！",401);
+        }
+    }
+
+    /**
+     * 发送重置密码验证
+     * @author mohuishou<1@lailin.xyz>
+     * @param $type
+     * @return \Laravel\Lumen\Http\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
+    public function resetPasswordVerify($type){
+        if(!is_numeric($type))
+            return $this->errorRequest(['type'=>'类型错误，type必须为数字']);
+
+        $user_type=$this->userType($type);
+
+        if($user_type){
+            return $user_type->resetPasswordVerify();
+        }else{
+            return $this->errorRequest(['type'=>'不存在该类型']);
+        }
+    }
 
     /**
      * 用户登录

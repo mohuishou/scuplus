@@ -34,6 +34,16 @@ $app->group(['namespace'=>'App\Http\Controllers\User'],function ($app){
         'uses'=>'UserController@resendVerify'
     ]);
 
+    $app->get('/user/password/{verify_code}',[
+        'as'=>'user.password.reset',
+        'uses'=>'UserController@resetPassword'
+    ]);
+
+    $app->post('/user/password/verify/{type}',[
+        'as'=>'user.password.verify',
+        'uses'=>'UserController@resetPasswordVerify'
+    ]);
+
     $app->post('/login/{type}',[
         'as'=>'user.login',
         'uses'=>'UserController@login'
