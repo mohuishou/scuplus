@@ -78,7 +78,12 @@ class UserController extends Controller
         $user_type=$this->userType($type);
 
         if($user_type){
-            return $user_type->verify($verify_code);
+            $res=$user_type->verify($verify_code);
+            if($res){
+                redirect('http"//scuplus.cn/login.html');
+            }else{
+                return $this->errorRequest(['verify_code'=>'验证码错误或已经失效！']);
+            }
         }else{
             return $this->errorRequest(['type'=>'不存在该类型']);
         }

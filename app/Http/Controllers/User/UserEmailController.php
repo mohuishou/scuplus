@@ -18,6 +18,10 @@ class UserEmailController extends UserBaseController
         $user=User::where('email',$this->_request->input('email'))
             ->where('password',sha1($this->_request->input('password')))
             ->first();
+
+        if(!$user->email_verify){
+            return $this->error(['error'=>'用户邮箱尚未验证！']);
+        }
 //        return sha1($this->_request->input('password'));
         if(empty($user)){
             return $this->errorRequest(['error'=>'用户名或密码错误']);
@@ -80,10 +84,10 @@ class UserEmailController extends UserBaseController
             //Todo: 生成绑定教务处的链接,生成token
             $token=$this->creatToken($user);
             if($user->save()){
-                return $this->success('邮件验证成功，绑定教务处（可跳过）',['token',$token]);
+                return $token;
             }
         };
-        return $this->errorRequest(['verify_code'=>'邮件验证码错误或者已经过期！']);
+        return false;
     }
 
 
