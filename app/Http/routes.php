@@ -41,20 +41,28 @@ $app->group(['namespace'=>'App\Http\Controllers\User'],function ($app){
 
 });
 
-$app->group(['middleware' => 'auth'],function () use($app){
+/**
+ * 需要认证的用户相关操作
+ */
+$app->group(['namespace'=>'App\Http\Controllers\User','middleware' => 'auth'],function () use($app){
     $app->post('/jwc/bind',[
         'as'=>'jwc.bind',
-        'uses'=>'App\Http\Controllers\User\UserInfoController@bindJwc'
+        'uses'=>'UserInfoController@bindJwc'
+    ]);
+
+    $app->post('/user/password',[
+        'as'=>'user.password.update',
+        'uses'=>'UserController@updatePassword'
     ]);
 
     $app->get('/user',[
         'as'=>'user.info',
-        'uses'=>'App\Http\Controllers\User\UserInfoController@index'
+        'uses'=>'UserInfoController@index'
     ]);
 
     $app->get('/token/refresh',[
         'as'=>'user.token.refresh',
-        'uses'=>'App\Http\Controllers\User\UserController@refreshToken'
+        'uses'=>'UserController@refreshToken'
     ]);
 
 

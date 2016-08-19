@@ -128,6 +128,22 @@ class UserController extends Controller
 
 
     /**
+     * 修改密码
+     * @author mohuishou<1@lailin.xyz>
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function updatePassword(){
+        $this->validate($this->_request, [
+            'password' => 'required|max:32|min:32',
+        ]);
+        $res=$this->_request->user()->update(['password'=>$this->_request->input('password')]);
+        if($res)
+            return $this->success('密码修改成功！');
+        return $this->error(['error'=>'密码修改失败！']);
+    }
+
+
+    /**
      * 用户登录
      * @author mohuishou<1@lailin.xyz>
      * @param $type
