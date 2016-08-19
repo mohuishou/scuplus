@@ -10,8 +10,8 @@
 | and give it the Closure to call when that URI is requested.
 |
 */
-define("BASE",'/project/scuplus-5.2/public');
-$app->get(BASE.'/',[
+//define("BASE",'/project/scuplus-5.2/public');
+$app->get('/',[
     'as'=>'email.test',
     'uses'=>'EXampleController@emailTest'
 ]);
@@ -19,7 +19,7 @@ $app->get(BASE.'/',[
 /**
  * 用户相关操作
  */
-$app->group(['namespace'=>'App\Http\Controllers\User','prefix'=>BASE],function ($app){
+$app->group(['namespace'=>'App\Http\Controllers\User'],function ($app){
     $app->post('/register/{type}',[
         'as'=>'user.register',
         'uses'=>'UserController@register'
@@ -37,7 +37,7 @@ $app->group(['namespace'=>'App\Http\Controllers\User','prefix'=>BASE],function (
 
 });
 
-$app->group(['prefix'=>BASE,'middleware' => 'auth'],function () use($app){
+$app->group(['middleware' => 'auth'],function () use($app){
     $app->post('/jwc/bind',[
         'as'=>'jwc.bind',
         'uses'=>'App\Http\Controllers\User\UserInfoController@bindJwc'
@@ -56,7 +56,7 @@ $app->group(['prefix'=>BASE,'middleware' => 'auth'],function () use($app){
 /**
  * 教务处相关操作
  */
-$app->group(['prefix'=>BASE.'/jwc','middleware' => 'auth','namespace' => 'App\Http\Controllers\Jwc'], function() use ($app) {
+$app->group(['prefix'=>'/jwc','middleware' => 'auth','namespace' => 'App\Http\Controllers\Jwc'], function() use ($app) {
 //    $app->post('/course',[
 //        'as'=>'jwc.course',
 //        'uses'=>'CourseController@index'
