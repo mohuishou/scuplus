@@ -18,8 +18,8 @@ class Course extends BaseModel{
         return $this->belongsToMany('App\Model\Teacher', 'course_teacher', 'cid', 'tid');
     }
 
-    public function evalute(){
-        return $this->hasMany('App\Model\Evalute', 'cid');
+    public function evaluate(){
+        return $this->hasMany('App\Model\Evaluate', 'cid');
     }
 
     public function schedule(){

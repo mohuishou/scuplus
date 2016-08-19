@@ -37,8 +37,8 @@ class User extends BaseModel implements
         return $this->hasOne('App\Model\UserInfo','uid');
     }
 
-    public function evalute(){
-        return $this->hasMany('App\Model\Evalute','uid');
+    public function evaluate(){
+        return $this->hasMany('App\Model\Evaluate','uid');
     }
 
     public function schedule(){

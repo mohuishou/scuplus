@@ -7,9 +7,9 @@
  */
 namespace App\Model;
 
-class Evalute extends BaseModel
+class Evaluate extends BaseModel
 {
-    protected $table = 'evalute';
+    protected $table = 'evaluate';
 
     protected $guarded = [
         'id'
@@ -23,8 +23,8 @@ class Evalute extends BaseModel
         return $this->belongsTo('App\Model\Teacher', 'tid');
     }
 
-    public function evaluteInfo(){
-        return $this->hasMany('App\Model\EvaluteInfo', 'eid');
+    public function evaluateInfo(){
+        return $this->hasMany('App\Model\EvaluateInfo', 'eid');
     }
 
     public function user(){

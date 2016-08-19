@@ -77,5 +77,20 @@ $app->group(['prefix'=>BASE.'/jwc','middleware' => 'auth','namespace' => 'App\Ht
         'as'=>'jwc.grade.show',
         'uses'=>'GradeController@index'
     ]);
+
+    $app->post('/evaluate/store',[
+        'as'=>'jwc.evaluate.store',
+        'uses'=>'EvaluateController@store'
+    ]);
+
+    $app->post('/evaluate/update',[
+        'as'=>'jwc.evaluate.store',
+        'uses'=>'EvaluateController@update'
+    ]);
+
+    $app->get('/evaluate',[
+        'as'=>'jwc.evaluate.show',
+        'uses'=>'EvaluateController@index'
+    ]);
 });
 

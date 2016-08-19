@@ -7,15 +7,15 @@
  */
 namespace App\Model;
 
-class EvaluteInfo extends BaseModel
+class EvaluateInfo extends BaseModel
 {
-    protected $table = 'evalute_info';
+    protected $table = 'evaluate_info';
 
     protected $guarded = [
         'id'
     ];
 
-    public function evalute(){
-        return $this->belongsTo('App\Model\Evalute', 'eid');
+    public function evaluate(){
+        return $this->belongsTo('App\Model\Evaluate', 'eid');
     }
 }
