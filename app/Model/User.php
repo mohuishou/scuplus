@@ -30,7 +30,7 @@ class User extends BaseModel implements
      * @var array
      */
     protected $hidden = [
-        'password',
+        'password','spassword'
     ];
 
     public function userinfo(){

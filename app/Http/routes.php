@@ -37,14 +37,18 @@ $app->group(['namespace'=>'App\Http\Controllers\User','prefix'=>BASE],function (
 
 });
 
-/**
- * 绑定教务处
- */
-$app->group(['prefix'=>BASE.'/jwc','middleware' => 'auth'],function () use($app){
-    $app->post('/bind',[
+$app->group(['prefix'=>BASE,'middleware' => 'auth'],function () use($app){
+    $app->post('/jwc/bind',[
         'as'=>'jwc.bind',
         'uses'=>'App\Http\Controllers\User\UserInfoController@bindJwc'
     ]);
+
+    $app->get('/user',[
+        'as'=>'user.info',
+        'uses'=>'App\Http\Controllers\User\UserInfoController@index'
+    ]);
+
+
 
 
 });

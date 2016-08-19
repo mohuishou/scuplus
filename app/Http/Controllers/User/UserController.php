@@ -80,7 +80,7 @@ class UserController extends Controller
         if($user_type){
             $res=$user_type->verify($verify_code);
             if($res){
-                redirect('http"//scuplus.cn/login.html');
+                return redirect('http"//scuplus.cn/login.html');
             }else{
                 return $this->errorRequest(['verify_code'=>'验证码错误或已经失效！']);
             }

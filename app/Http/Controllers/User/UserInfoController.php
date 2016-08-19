@@ -7,6 +7,19 @@ use Mohuishou\Lib\ScuplusJwc;
 class UserInfoController extends Controller
 {
 
+    /**
+     * 获取用户信息
+     * @author mohuishou<1@lailin.xyz>
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function index(){
+        $user=$this->_request->user();
+        $user->userinfo;
+        if($user){
+            return $this->success('用户信息获取成功！',$user);
+        }
+        return $this->error(['error'=>'用户信息获取失败']);
+    }
 
     /**
      * 绑定教务处，并且更新个人信息
