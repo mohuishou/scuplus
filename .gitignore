@@ -1,3 +1,5 @@
 /vendor
 .env
 tests/TestCase.php
+storage/framework/cache/
+storage/framework/views/
