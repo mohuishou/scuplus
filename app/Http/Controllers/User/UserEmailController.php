@@ -89,7 +89,7 @@ class UserEmailController extends UserBaseController
      */
     public function sendVerifyEmail($email,$uid){
         $verify_code=md5($email);
-        $username=User::find($uid)->name;
+        $username=User::find($uid)->username;
         Cache::put($verify_code, $uid, 60*24);//验证码24小时有效
         $verify_url=route('user.verify',[
             'type'=>1,
@@ -130,7 +130,7 @@ class UserEmailController extends UserBaseController
         $this->dispatch(new EmailJob());
         $res=Mail::queue('emails.resetPassword',[
             'verify_url'=>$verify_url,
-            'username'=>$user->name
+            'username'=>$user->username
         ],function ($m) use($email){
             $m->to($email)->subject('【Scuplus】密码重置');
         });
