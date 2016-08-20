@@ -67,7 +67,7 @@ class UserEmailController extends UserBaseController
         if($check==1){
             $user=User::where('email',$email)->first();
             if(!$user)
-                return $this->errorRequest(['emial'=>'该用户不存在！']);
+                return $this->errorRequest(['email'=>'该用户不存在！']);
             $uid=$user->id;
         }
 

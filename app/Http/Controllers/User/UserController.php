@@ -124,22 +124,20 @@ class UserController extends Controller
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function checkUser(){
+        $this->validate($this->_request, [
+            'param' => 'required', //需要验证的参数名
+            'value' => 'required', //验证的值
+        ]);
         $check_area=['username','email','phone'];
-        $all=$this->_request->all();
-        if(count($all)!=1){
-            return $this->error(['error'=>'只能验证一个参数！']);
-        }
-        foreach ($all as $k =>$v){
-            $res=in_array($k,$check_area);
-            if(!$res)
-                return $this->error(['error'=>'只能验证'.implode(',',$check_area).'当中的一个']);
-
-            $res=User::where($k,$v)->first();
-
-            if($res)
-                return $this->success('该用户已存在！',['user'=>1]);
-            return $this->success('不存在该用户',['user'=>0]);
-        }
+        $param=$this->_request->input('param');
+        $v=$this->_request->input('value');
+        $res=in_array($param,$check_area);
+        if(!$res)
+            return $this->error(['error'=>'只能验证'.implode(',',$check_area).'当中的一个']);
+        $res=User::where($param,$v)->first();
+        if($res)
+            return $this->success('该用户已存在！',['user'=>1]);
+        return $this->success('不存在该用户',['user'=>0]);
     }
 
     /**
