@@ -28,6 +28,7 @@ class UserController extends Controller
     }
 
     /**
+     * 注册
      * @author mohuishou<1@lailin.xyz>
      * @param $type
      * @return \Laravel\Lumen\Http\ResponseFactory|\Symfony\Component\HttpFoundation\Response
@@ -46,25 +47,6 @@ class UserController extends Controller
     }
 
     /**
-     * 创建对应用户类型类
-     * @author mohuishou<1@lailin.xyz>
-     * @param $type
-     * @return bool
-     */
-    protected function userType($type) {
-        if(!isset($this->_user_type[$type])){
-            return false;
-        }
-        $classname='\App\Http\Controllers\User\User'.$this->_user_type[$type].'Controller';
-        if(class_exists($classname)){
-            return new $classname($this->_request);
-        }else{
-            return false;
-        };
-    }
-
-
-    /**
      * 刷新token
      * @author mohuishou<1@lailin.xyz>
      * @return \Symfony\Component\HttpFoundation\Response
@@ -79,7 +61,6 @@ class UserController extends Controller
             return $this->error(['error'=>'token更新失败']);
         }
     }
-
 
     /**
      * 发送验证码
@@ -100,7 +81,6 @@ class UserController extends Controller
         }
     }
 
-
     /**
      * 修改密码
      * @author mohuishou<1@lailin.xyz>
@@ -119,8 +99,6 @@ class UserController extends Controller
         return $this->error(['error'=>'密码修改失败！']);
     }
 
-
-
     /**
      * 用户登录
      * @author mohuishou<1@lailin.xyz>
@@ -138,5 +116,47 @@ class UserController extends Controller
         }else{
             return $this->errorRequest(['type'=>'不存在该类型']);
         }
+    }
+
+    /**
+     * 用户检测
+     * @author mohuishou<1@lailin.xyz>
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function checkUser(){
+        $check_area=['username','email','phone'];
+        $all=$this->_request->all();
+        if(count($all)!=1){
+            return $this->error(['error'=>'只能验证一个参数！']);
+        }
+        foreach ($all as $k =>$v){
+            $res=in_array($k,$check_area);
+            if(!$res)
+                return $this->error(['error'=>'只能验证'.implode(',',$check_area).'当中的一个']);
+
+            $res=User::where($k,$v)->first();
+
+            if($res)
+                return $this->success('该用户已存在！',['user'=>1]);
+            return $this->success('不存在该用户',['user'=>0]);
+        }
+    }
+
+    /**
+     * 创建对应用户类型类
+     * @author mohuishou<1@lailin.xyz>
+     * @param $type
+     * @return bool
+     */
+    protected function userType($type) {
+        if(!isset($this->_user_type[$type])){
+            return false;
+        }
+        $classname='\App\Http\Controllers\User\User'.$this->_user_type[$type].'Controller';
+        if(class_exists($classname)){
+            return new $classname($this->_request);
+        }else{
+            return false;
+        };
     }
 }

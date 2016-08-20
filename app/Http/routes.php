@@ -25,6 +25,10 @@ $app->group(['namespace'=>'App\Http\Controllers\User'],function ($app){
         'uses'=>'UserController@sendVerifyCode'
     ]);
 
+    $app->post('/user/check',[
+        'as'=>'user.check',
+        'uses'=>'UserController@checkUser'
+    ]);
 
     $app->post('/login/{type}',[
         'as'=>'user.login',
