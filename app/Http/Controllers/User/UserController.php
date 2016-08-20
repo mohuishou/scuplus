@@ -93,7 +93,9 @@ class UserController extends Controller
 
         //从缓存当中获取uid
         $uid=Cache::pull($this->_request->input('verifyCode'));
-        $res=User::find($uid)->update(['password'=>$this->_request->input('password')]);
+        $res=User::find($uid)->update([
+            'password'=>sha1($this->_request->input('password'))
+        ]);
         if($res)
             return $this->success('密码修改成功！');
         return $this->error(['error'=>'密码修改失败！']);
@@ -133,7 +135,7 @@ class UserController extends Controller
         $v=$this->_request->input('value');
         $res=in_array($param,$check_area);
         if(!$res)
-            return $this->error(['error'=>'只能验证'.implode(',',$check_area).'当中的一个']);
+            return $this->errorRequest(['param'=>'只能验证'.implode(',',$check_area).'当中的一个']);
         $res=User::where($param,$v)->first();
         if($res)
             return $this->success('该用户已存在！',['user'=>1]);
