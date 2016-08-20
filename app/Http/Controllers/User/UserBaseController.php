@@ -34,12 +34,14 @@ abstract class UserBaseController extends Controller
     /**
      * 生成6位数字验证码，2小时以内有效
      * @author mohuishou<1@lailin.xyz>
+     * @param int $uid
+     * @return string
      */
-    public function createVerifyCode(){
+    public function createVerifyCode($uid=-1){
         $verify_code='';
         for ($i=0;$i<6;$i++)
             $verify_code .=rand(0,9);
-        Cache::put($verify_code,1,60*2);
+        Cache::put($verify_code,$uid,60*2);
         return $verify_code;
     }
 

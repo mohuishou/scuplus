@@ -19,10 +19,6 @@ class UserEmailController extends UserBaseController
             ->where('password',sha1($this->_request->input('password')))
             ->first();
 
-        if(!$user->email_verify){
-            return $this->error(['error'=>'用户邮箱尚未验证！']);
-        }
-//        return sha1($this->_request->input('password'));
         if(empty($user)){
             return $this->errorRequest(['error'=>'用户名或密码错误']);
         }
@@ -47,15 +43,10 @@ class UserEmailController extends UserBaseController
         $user->email=$this->_request->input('email');
         $user->username=$this->_request->input('username');
         $user->password=sha1($this->_request->input('password'));
-        $user->save();
-
-        $res=$this->sendVerifyEmail($user->email,$user->id);
-
-
+        $res=$user->save();
         if($res){
-            return $this->success('注册成功，验证邮件已发送，等待验证邮箱！');
+            return $this->success('注册成功！');
         }
-
     }
 
     /**
@@ -68,7 +59,23 @@ class UserEmailController extends UserBaseController
             'email' => 'required|email',
         ]);
         $email=$this->_request->input('email');
-        $verify_code=$this->createVerifyCode();
+
+        //是否需要验证用户是否存在
+        if($this->_request->has('check')){
+            $check=$this->_request->input('check');
+        }
+        if($check==1){
+            $user=User::where('email',$email)->first();
+            if(!$user)
+                return $this->errorRequest(['emial'=>'该用户不存在！']);
+            $uid=$user->id;
+        }
+
+        if(isset($uid)){
+            $verify_code=$this->createVerifyCode($uid);
+        }else{
+            $verify_code=$this->createVerifyCode();
+        }
         //发送含有验证码连接的邮件给用户
         $this->dispatch(new EmailJob());
         $res=Mail::queueOn('email','emails.verifyCode',[
@@ -82,110 +89,6 @@ class UserEmailController extends UserBaseController
     }
 
 
-    /**
-     * 重新发送验证邮件
-     * @author mohuishou<1@lailin.xyz>
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function resendVerify(){
-        $this->validate($this->_request, [
-            'email' => 'required|email|exists:user',
-        ]);
-        $email=$this->_request->input('email');
-        $user=User::where('email',$email)->first();
-        if($user->email_verify){
-            return $this->error(['error'=>'该邮箱已验证!,请直接登录']);
-        }
-        $res=$this->sendVerifyEmail($email,$user->id);
-        if($res){
-            return $this->success('验证邮件已再次发送，等待验证邮箱！');
-        }
-    }
-
-
-    /**
-     * 发送验证邮件
-     * @author mohuishou<1@lailin.xyz>
-     * @param $email
-     * @param $uid
-     * @return mixed
-     */
-    public function sendVerifyEmail($email,$uid){
-        $verify_code=md5($email);
-        $username=User::find($uid)->username;
-        Cache::put($verify_code, $uid, 60*24);//验证码24小时有效
-        $verify_url=route('user.verify',[
-            'type'=>1,
-            'verify_code'=>$verify_code
-        ]);
-
-        //发送含有验证码连接的邮件给用户
-        $this->dispatch(new EmailJob());
-        $res=Mail::queue('emails.emailVerify',[
-            'verify_url'=>$verify_url,
-            'username'=>$username
-        ],function ($m) use($email){
-            $m->to($email)->subject('【Scuplus】注册验证');
-        });
-
-        return $res;
-    }
-
-
-    /**
-     * 重置密码
-     * @author mohuishou<1@lailin.xyz>
-     */
-    public function resetPasswordVerify(){
-        $this->validate($this->_request, [
-            'email' => 'required|email|exists:user',
-        ]);
-        $email=$this->_request->input('email');
-        $user=User::where('email',$email)->first();
-
-        $verify_code=md5($email.'reset password');
-        Cache::put($verify_code, $user->id, 60*24);//验证码24小时有效
-        $verify_url=route('user.password.reset',[
-            'verify_code'=>$verify_code
-        ]);
-
-        //发送含有验证码连接的邮件给用户
-        $this->dispatch(new EmailJob());
-        $res=Mail::queue('emails.resetPassword',[
-            'verify_url'=>$verify_url,
-            'username'=>$user->username
-        ],function ($m) use($email){
-            $m->to($email)->subject('【Scuplus】密码重置');
-        });
-
-        if($res){
-            return $this->success('验证邮件已发送，等待验证邮箱！');
-        }
-
-
-
-    }
-
-
-    /**
-     * 邮箱验证
-     * @author mohuishou<1@lailin.xyz>
-     * @param $verify_code
-     * @return \Laravel\Lumen\Http\ResponseFactory|\Symfony\Component\HttpFoundation\Response
-     */
-    public function verify($verify_code){
-        //从缓存当中取出验证码并且删除
-        $uid=Cache::pull($verify_code);
-        if($uid){
-            $user=User::find($uid);
-            $user->email_verify=1;
-            $token=$this->creatToken($user);
-            if($user->save()){
-                return $token;
-            }
-        };
-        return false;
-    }
 
 
 }

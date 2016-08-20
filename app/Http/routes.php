@@ -19,35 +19,12 @@ $app->get('/',function (){
  * 用户相关操作
  */
 $app->group(['namespace'=>'App\Http\Controllers\User'],function ($app){
-    $app->post('/register/{type}',[
-        'as'=>'user.register',
-        'uses'=>'UserController@register'
-    ]);
-
-    $app->get('/register/{type}/verify/{verify_code}',[
-        'as'=>'user.verify',
-        'uses'=>'UserController@verify'
-    ]);
 
     $app->post('/verify/send/{type}',[
         'as'=>'user.verify.send',
         'uses'=>'UserController@sendVerifyCode'
     ]);
 
-    $app->post('/verify/resend/{type}',[
-        'as'=>'user.verify.resend',
-        'uses'=>'UserController@resendVerify'
-    ]);
-
-    $app->get('/user/password/{verify_code}',[
-        'as'=>'user.password.reset',
-        'uses'=>'UserController@resetPassword'
-    ]);
-
-    $app->post('/user/password/verify/{type}',[
-        'as'=>'user.password.verify',
-        'uses'=>'UserController@resetPasswordVerify'
-    ]);
 
     $app->post('/login/{type}',[
         'as'=>'user.login',
@@ -60,9 +37,17 @@ $app->group(['namespace'=>'App\Http\Controllers\User'],function ($app){
  * 需要验证验证码的路由
  */
 $app->group(['namespace'=>'App\Http\Controllers\User','middleware' => 'verify_code'],function () use($app){
-    $app->get('/test',function (){
-        return 123;
-    });
+    $app->post('/register/{type}',[
+        'as'=>'user.register',
+        'uses'=>'UserController@register'
+    ]);
+
+    $app->post('/user/password',[
+        'as'=>'user.password.update',
+        'uses'=>'UserController@updatePassword'
+    ]);
+
+
 });
 /**
  * 需要认证的用户相关操作
@@ -73,10 +58,7 @@ $app->group(['namespace'=>'App\Http\Controllers\User','middleware' => 'auth'],fu
         'uses'=>'UserInfoController@bindJwc'
     ]);
 
-    $app->post('/user/password',[
-        'as'=>'user.password.update',
-        'uses'=>'UserController@updatePassword'
-    ]);
+
 
     $app->get('/user',[
         'as'=>'user.info',
