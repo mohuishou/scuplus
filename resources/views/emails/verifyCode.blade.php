@@ -17,6 +17,7 @@
         border-radius: 8px;
         background-color: rgb(120, 195, 0);
         cursor: hand;
+        text-decoration: none;
     }
 
     .btn:hover {
@@ -24,13 +25,19 @@
         background-color: #78c300;
         border-color: #c5e591;
     }
+
+    #verify{
+        font-size: 30px;
+        font-weight: bold;
+        /*color:#333244;*/
+    }
+
+
 </style>
 <div id="main">
-    <p>尊敬的用户 {{ $username }} ：</p>
-    <p>您好！感谢您注册Scuplus，请点击下方链接验证邮件，该链接24小时以内有效</p>
-    <a class="btn" style="text-align: center;display: block;" href="{{ $verify_url }}">点击验证</a>
-    <br/>
-    <p>如果链接无法点击，请将下方链接地址复制到浏览器地址栏谢谢：</p>
-    <a href="{{ $verify_url }}"><br/>{{ $verify_url }}</a>
+    <p>尊敬的Scuplus用户 ：</p>
+    <p>您好！感谢您使用Scuplus，您的验证码如下（2小时内有效）：</p>
+    <a id="verify" class="btn" style="text-align: center;display: block;" href="#">{{$verify_code}}</a>
+
     <p style="text-align: right;margin-right: 50px;">——PowerBy Scuplus</p>
 </div>

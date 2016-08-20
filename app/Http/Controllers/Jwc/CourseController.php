@@ -18,7 +18,7 @@ class CourseController extends JwcBaseController{
     protected $_jwc_name='Course';
 
     public function index(){
-
+        $data=['college','courseId','name','day','session','campus'];
     }
 
     /**

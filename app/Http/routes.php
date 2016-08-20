@@ -29,6 +29,11 @@ $app->group(['namespace'=>'App\Http\Controllers\User'],function ($app){
         'uses'=>'UserController@verify'
     ]);
 
+    $app->post('/verify/send/{type}',[
+        'as'=>'user.verify.send',
+        'uses'=>'UserController@sendVerifyCode'
+    ]);
+
     $app->post('/verify/resend/{type}',[
         'as'=>'user.verify.resend',
         'uses'=>'UserController@resendVerify'
@@ -51,6 +56,14 @@ $app->group(['namespace'=>'App\Http\Controllers\User'],function ($app){
 
 });
 
+/**
+ * 需要验证验证码的路由
+ */
+$app->group(['namespace'=>'App\Http\Controllers\User','middleware' => 'verify_code'],function () use($app){
+    $app->get('/test',function (){
+        return 123;
+    });
+});
 /**
  * 需要认证的用户相关操作
  */

@@ -130,6 +130,26 @@ class UserController extends Controller
 
 
     /**
+     * 发送验证码
+     * @author mohuishou<1@lailin.xyz>
+     * @param $type
+     * @return \Laravel\Lumen\Http\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
+    public function sendVerifyCode($type){
+        if(!is_numeric($type))
+            return $this->errorRequest(['type'=>'类型错误，type必须为数字']);
+
+        $user_type=$this->userType($type);
+
+        if($user_type){
+            return $user_type->sendVerifyCode();
+        }else{
+            return $this->errorRequest(['type'=>'不存在该类型']);
+        }
+    }
+
+
+    /**
      * 修改密码
      * @author mohuishou<1@lailin.xyz>
      * @return \Symfony\Component\HttpFoundation\Response

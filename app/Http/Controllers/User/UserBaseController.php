@@ -23,6 +23,27 @@ abstract class UserBaseController extends Controller
      */
     abstract public function login();
 
+
+    /**
+     * 发送验证码
+     * @author mohuishou<1@lailin.xyz>
+     * @return mixed
+     */
+    abstract public function sendVerifyCode();
+
+    /**
+     * 生成6位数字验证码，2小时以内有效
+     * @author mohuishou<1@lailin.xyz>
+     */
+    public function createVerifyCode(){
+        $verify_code='';
+        for ($i=0;$i<6;$i++)
+            $verify_code .=rand(0,9);
+        Cache::put($verify_code,1,60*2);
+        return $verify_code;
+    }
+
+
     /**
      * 创建token
      * @author mohuishou<1@lailin.xyz>
