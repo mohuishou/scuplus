@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Model\User;
 use Closure;
 use Illuminate\Support\Facades\Cache;
 

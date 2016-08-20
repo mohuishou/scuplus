@@ -7,8 +7,10 @@
  */
 namespace App\Http\Controllers\Jwc;
 use App\Http\Controllers\Controller;
+use App\Model\Course;
 use App\Model\Evaluate;
 use App\Model\EvaluateInfo;
+use App\Model\Teacher;
 
 class EvaluateController extends Controller{
 
@@ -28,6 +30,13 @@ class EvaluateController extends Controller{
         $eva_data['cid']=$this->_request->input('cid');
         $eva_data['tid']=$this->_request->input('tid');
         $eva_data['uid']=$this->_request->user()->id;
+
+        //计算该课程的评教平均分
+        $course=Course::find($eva_data['cid']);
+        $course->updateAvgStar($this->_request->input('stars'));
+        //计算该老师的评教平均分
+        $teacher=Teacher::find($eva_data['tid']);
+        $teacher->updateAvgStar($this->_request->input('stars'));
 
         //查询是否已经存在该课程该老师的评价
         $evaluate_data=$this->_request->user()->evaluate;
@@ -75,19 +84,17 @@ class EvaluateController extends Controller{
 
 
     /**
-     * 更新评教信息
+     * 更新评教信息，评分不能修改
      * @author mohuishou<1@lailin.xyz>
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function update(){
         $this->validate($this->_request, [
             'id'=>'required|numeric',   //evaluate_info的id
-            'stars' => 'required|numeric|min:0|max:5',
             'message' => 'required|max:200|min:6',
         ]);
 
         $eva_info=EvaluateInfo::find($this->_request->input('id'));
-        $eva_info_data['stars']=$this->_request->input('stars');
         $eva_info_data['message']=$this->_request->input('message');
         $res=$eva_info->update($eva_info_data);
         if($res)
