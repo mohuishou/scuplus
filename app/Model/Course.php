@@ -15,6 +15,7 @@ class Course extends BaseModel{
     ];
 
 
+
     /**
      * 更新平均成绩
      * @author mohuishou<1@lailin.xyz>
@@ -24,6 +25,12 @@ class Course extends BaseModel{
     public function updateAvgGrade($grade){
         $data['count_grade']=$this->count_grade+1;
         $data['avg_grade']=($this->count_grade*$this->avg_grade+$grade)/($data['count_grade']);
+        //计算通过率/挂科率
+        if($grade>=60){
+            $data['pass_rate']=($this->count_grade*$this->pass_rate+1)/($data['count_grade']);
+        }else{
+            $data['pass_rate']=($this->count_grade*$this->pass_rate)/($data['count_grade']);
+        }
         return $this->update($data);
     }
 
