@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Model\User;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
@@ -34,10 +35,16 @@ class AuthServiceProvider extends ServiceProvider
 
         Auth::viaRequest('api', function ($request) {
             if ($request->input('token')) {
-                $uid=Cache::get($request->input('token'));
-                if($uid){
-                    return User::find($uid);
+                $token=$request->input('token');
+                try{
+                    $token_arr=json_decode(decrypt($token));
+                    $token_now=Cache::get('user.token.'.$token_arr->uid);
+                    if($token==$token_now){
+                        return User::find($token_arr->uid);
+                    }
+                }catch (DecryptException $e){
                 }
+
             }
         });
     }

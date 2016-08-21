@@ -55,11 +55,12 @@ abstract class UserBaseController extends Controller
     public function creatToken(User $user){
         $token_arr=[
             'uid'=>$user->id,
-            'time'=>60*2 //有效时间2小时
+            'time'=>60*2, //有效时间2小时
+            'start'=>time() //token创建时间
         ];
         $token_str=json_encode($token_arr);
-        $token=sha1($token_str);
-        Cache::put($token,$user->id,60*2);
+        $token=encrypt($token_str);
+        Cache::put('user.token.'.$user->id,$token,60*2);
         return $token;
     }
 
@@ -70,9 +71,10 @@ abstract class UserBaseController extends Controller
      * @return \Laravel\Lumen\Http\ResponseFactory|string|\Symfony\Component\HttpFoundation\Response
      */
     public function refreshToken($token){
-        $uid=Cache::pull($token);
-        if($uid){
-            return $this->creatToken(User::find($uid));
+        $token_arr=json_decode(decrypt($token));
+        $token_now=Cache::pull('user.token.'.$token_arr->uid);
+        if($token==$token_now){
+            return $this->creatToken(User::find($token_arr->uid));
         }
         return false;
     }
