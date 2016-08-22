@@ -20,7 +20,7 @@ class UserEmailController extends UserBaseController
             ->first();
 
         if(empty($user)){
-            return $this->errorRequest(['error'=>'用户名或密码错误']);
+            return $this->errorRequest(['error'=>'邮箱或密码错误']);
         }
 
         $token=$this->creatToken($user);

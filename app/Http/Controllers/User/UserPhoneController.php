@@ -14,12 +14,37 @@ class UserPhoneController extends UserBaseController{
 
     public function login()
     {
-        // TODO: Implement login() method.
+        $this->validate($this->_request, [
+            'password' => 'required|min:32|max:32',  //只接受md5加密的密码字符串
+            'phone' => 'required|min:11|max:11|',
+        ]);
+        $user=User::where('phone',$this->_request->input('phone'))
+            ->where('password',sha1($this->_request->input('password')))
+            ->first();
+
+        if(empty($user)){
+            return $this->errorRequest(['error'=>'手机号或密码错误']);
+        }
+
+        $token=$this->creatToken($user);
+        return $this->success('登陆成功！',['token'=>$token]);
     }
 
     public function register()
     {
-        // TODO: Implement register() method.
+        $this->validate($this->_request, [
+            'username' => 'required|unique:user|max:10',
+            'password' => 'required|min:32|max:32',  //只接受md5加密的密码字符串
+            'phone' => 'required|min:11|max:11|unique:user',
+        ]);
+        $user=new User();
+        $user->phone=$this->_request->input('phone');
+        $user->username=$this->_request->input('username');
+        $user->password=sha1($this->_request->input('password'));
+        $res=$user->save();
+        if($res){
+            return $this->success('注册成功！');
+        }
     }
 
     public function sendVerifyCode()
