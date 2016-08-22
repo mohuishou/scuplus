@@ -86,7 +86,7 @@ class CourseController extends JwcBaseController{
          */
         $course=Course::where($map);
         $course=$this->like($course,$map_like);
-        $course=$course->orderBy($order, 'desc')->paginate(15);
+        $course=$course->orderBy($order, 'desc')->paginate(10);
         foreach ($course as $v){
             $v->teacher;
         }
@@ -125,7 +125,7 @@ class CourseController extends JwcBaseController{
 
         $teacher=Teacher::where($map);
         $teacher=$this->like($teacher,$map_like);
-        $teacher=$teacher->orderBy($order, 'desc')->paginate(15);
+        $teacher=$teacher->orderBy($order, 'desc')->paginate(10);
 
         foreach ($teacher as $k=>$v){
             $v->course;

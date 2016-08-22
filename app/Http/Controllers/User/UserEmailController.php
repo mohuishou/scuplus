@@ -60,7 +60,16 @@ class UserEmailController extends UserBaseController
         ]);
         $email=$this->_request->input('email');
 
+        //邮件发送限制，避免被恶意利用对同一邮箱进行轰炸
+        if(Cache::get('verify.'.$email)){
+            return $this->error(['error'=>'两分钟内已发送验证码邮件，请两分钟之后再试']);
+        }
+        if(Cache::get('verify.count.'.$email)>=10){
+            return $this->error(['error'=>'8小时以内已经向'.$email.'发送邮件超过10封，请之后再试']);
+        }
+
         //是否需要验证用户是否存在
+        $check=0;
         if($this->_request->has('check')){
             $check=$this->_request->input('check');
         }
@@ -83,7 +92,17 @@ class UserEmailController extends UserBaseController
         ],function ($m) use($email){
             $m->to($email)->subject('【Scuplus】验证码');
         });
+
         if($res){
+            Cache::put('verify.'.$email,'1',2);//两分钟内不允许重复发送
+
+            //统计8小时以内对同一邮箱发送的邮件数目
+            if(Cache::get('verify.count.'.$email)){
+                Cache::increment('verify.count.'.$email, 1);
+            }else{
+                Cache::put('verify.count.'.$email,'1',60*8);
+            }
+
             return $this->success('验证码邮件已发送，等待查收！');
         }
     }
