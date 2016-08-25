@@ -53,7 +53,8 @@ class ScheduleController extends JwcBaseController{
         }
 
         //获取当前所有课程
-        $data=$this->_jwc_obj->index();
+        $data=$this->_jwc_obj->notFull();
+
         $schedule_data['term']=$term;
         $schedule_data['uid']=$this->_user->id;
         foreach ($data as $k => $v){
