@@ -78,6 +78,10 @@ $app->group(['namespace'=>'App\Http\Controllers\User','middleware' => 'auth'],fu
 
 });
 
+$app->get('/download/ics/{file_name}',[
+    'as'=>'jwc.download.ics',
+    'uses'=>'Jwc\ScheduleController@icsDownload'
+]);
 
 
 /**
@@ -104,6 +108,12 @@ $app->group(['prefix'=>'/jwc','middleware' => 'auth','namespace' => 'App\Http\Co
         'as'=>'jwc.schedule.show',
         'uses'=>'ScheduleController@index'
     ]);
+
+    $app->get('/schedule/ics',[
+        'as'=>'jwc.schedule.ics',
+        'uses'=>'ScheduleController@ics'
+    ]);
+
 
     $app->post('/grade',[
         'as'=>'jwc.grade.update',

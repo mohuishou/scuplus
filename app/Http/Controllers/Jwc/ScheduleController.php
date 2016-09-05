@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Jwc;
 
 use App\Model\Course;
 use App\Model\Schedule;
+use Illuminate\Support\Facades\Storage;
 
 class ScheduleController extends JwcBaseController{
     protected $_jwc_name='Schedule';
@@ -75,43 +76,108 @@ EOD;
             foreach ($teachers as $val){
                 $teacher.=$val->name . ",";
             }
-            $address=$course->campus ."-". $course->building ."-". $course->classroom;
+            $address="@".$course->campus ." ". $course->building ." ". $course->classroom;
 
-            $week_start = substr($course -> allWeek, 0, 1 );
-            $week_end = substr($course -> allWeek,0,-1);
+
             $week_arr=explode(',',$course->allWeek);
-
+            $week_start =$week_arr[0];
+            $week_end = end($week_arr);
             //重复周次
             $count='COUNT='.count($week_arr);
-
             //间隔周次
-            ($week_arr[1]-$week_arr[0])!=1 || $interval='INTERVAL=' . $week_arr[1]-$week_arr[0];
+            $interval="";
+            if(($week_arr[1]-$week_arr[0])!=1){
+                $interval=';INTERVAL=' . ($week_arr[1]-$week_arr[0]);
+            }
 
             //整理上课节次
-            $session_start = substr($course->session, 0, 1 );
-            $session_end = substr($course->session,0,-1);
-            $attendClassTime=['0815','0910','1015','1110','1350','1445','1550','1645','1740','1920','2015','2110'];
-            $finishClassTime=['0900','0955','1100','1155','1435','1530','1635','1730','1825','2005','2100','2155'];
+            $session_arr=explode(',',$course->session);
+            $session_start =$session_arr[0];
+            $session_end = end($session_arr);
 
-            $school_start=strtotime("2016-09-05");//设置一学期当中的第一天
+            //上下课时间
+            $class_time=[
+                [
+                    "attend"=>['0815','0910','1015','1110','1350','1445','1550','1645','1740','1920','2015','2110'],
+                    "finish"=>['0900','0955','1100','1155','1435','1530','1635','1730','1825','2005','2100','2155']
+                ],
+                [
+                    "attend"=>['0800','0855','1000','1055','1400','1455','1550','1655','1750','1930','2025','2120'],
+                    "finish"=>['0845','0940','1045','1140','1445','1540','1635','1740','1835','2015','2110','2205']
+                ]
+            ];
+
+
+            $school_start=strtotime("2016-09-04");//设置一学期当中的第一天，从周日开始计算
             $course_start=$school_start+(($course->day)+($week_start-1)*7)*3600*24;
+            if($week_start==1&& $course->day==7)
+                $course_start=$school_start;
             $course_start=date('Ymd',$course_start);
+
+            $campus=$this->_user->userinfo->campus;
+            if($campus=="江安"){
+                $campus_id=0;
+            }else{
+                $campus_id=1;
+            }
+
             //按照ics时间整理
-            $dtstart=$course_start.'T'.$attendClassTime[$session_start-1].'00';
-            $dtend=$course_start.'T'.$finishClassTime[$session_end-1].'00';
+            $dtstart=$course_start.'T'.$class_time[$campus_id]["attend"][$session_start-1].'00';
+            $dtend=$course_start.'T'.$class_time[$campus_id]["finish"][$session_end-1].'00';
+
+            //整理星期几上课
+            $c=['MO','TU','WE','TH','FR','SA','SU'];
+            $byday=$c[$course->day-1];
 
             $uid=md5($this->_user->id)."@scuplus.cn";
 
-            $description="课程号：".$course->courseId . "课序号：".$course->lessonId . " \r\n 学分： ". $course->credit . "周次： ". $week_start ."-".$week_end ."\r\n 平均成绩：" . $course->avg_grade ." 平均得分：" . $course->avg_star ;
-            $course->pass_rate || $fail_rate="无";
-            $fail_rate=(1-$course->pass_rate)*100;
-            $description .= "挂科率：". $fail_rate ."%";
+            $description="教师：".$teacher."\\n课程号：".$course->courseId . "，课序号：".$course->lessonId . " \\n学分： ". $course->credit . "，周次： ". $week_start ."-".$week_end ."\\n平均成绩：" . $course->avg_grade ." ，平均得分：" . $course->avg_star ;
+            if($course->pass_rate){
+                $fail_rate=(1-$course->pass_rate)*100;
+            }else{
+                $fail_rate="无";
+            }
+            $description .= "，挂科率：". $fail_rate ."%";
 
+            $ics .=<<<EOD
 
+BEGIN:VEVENT
+DTSTART;TZID=Asia/Shanghai:$dtstart
+DTEND;TZID=Asia/Shanghai:$dtend
+RRULE:FREQ=WEEKLY;$count{$interval};BYDAY=$byday
+DTSTAMP:{$dtstart}
+UID:
+CREATED:{$dtstart}
+DESCRIPTION:$description
+LAST-MODIFIED:{$dtend}Z
+LOCATION:$address
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:{$course->name}-{$v->courseType}
+TRANSP:OPAQUE
+END:VEVENT
+EOD;
+        }
+        $ics .="\r\n".'END:VCALENDAR';
+
+        $file_name=md5(time()).".ics";
+        //生成文件保存
+        $file_res=Storage::put("ics\\".$file_name,$ics);
+        if($file_res){
+            //TODO:生成下载链接，保存到数据库
+            $file_link=$file_name;
+            return $this->success("ical文件生成成功！",['url'=>$file_link]);
+        }else{
+            return $this->error(['error'=>"ical文件生成失败，请稍后再试！"]);
         }
 
+    }
 
 
+    public function icsDownload($file_name){
+        $path= storage_path("app/ics/".$file_name);
+        $header=['Content-Type:application/octet-stream'];
+        return response()->download($path, "schedule.ics");
 
     }
 

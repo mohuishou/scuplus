@@ -27,14 +27,16 @@ class JwcBaseController extends Controller{
     public function __construct(Request $request)
     {
         parent::__construct($request);
+        if(!empty($this->_request->user())){
+            $sid=$this->_request->user()->sid;
+            $spassword=decrypt($this->_request->user()->spassword);
+            $this->_user=$this->_request->user();
+            //初始化要操作的教务处类，默认为评教
+            $this->_jwc_name || $this->_jwc_name='Evaluate';
+            $this->_jwc_obj=ScuplusJwc::create($this->_jwc_name,$sid,$spassword);
+        }
 
-        $sid=$this->_request->user()->sid;
-        $spassword=decrypt($this->_request->user()->spassword);
 
-        $this->_user=$this->_request->user();
 
-        //初始化要操作的教务处类，默认为评教
-        $this->_jwc_name || $this->_jwc_name='Evaluate';
-        $this->_jwc_obj=ScuplusJwc::create($this->_jwc_name,$sid,$spassword);
     }
 }
