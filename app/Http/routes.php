@@ -79,7 +79,7 @@ $app->group(['namespace'=>'App\Http\Controllers\User','middleware' => 'auth'],fu
 });
 
 $app->get('/download/ics/{file_name}',[
-    'as'=>'jwc.download.ics',
+    'as'=>'download.ics',
     'uses'=>'Jwc\ScheduleController@icsDownload'
 ]);
 

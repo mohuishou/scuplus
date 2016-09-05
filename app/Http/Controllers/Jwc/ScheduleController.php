@@ -9,6 +9,7 @@ namespace App\Http\Controllers\Jwc;
 
 
 use App\Model\Course;
+use App\Model\Ics;
 use App\Model\Schedule;
 use Illuminate\Support\Facades\Storage;
 
@@ -158,27 +159,49 @@ TRANSP:OPAQUE
 END:VEVENT
 EOD;
         }
-        $ics .="\r\n".'END:VCALENDAR';
+        try{
+            $ics .="\r\n".'END:VCALENDAR';
+            $ics_model=$this->_user->ics;
+            $ics_exist=isset($ics_model->file_name);
 
-        $file_name=md5(time()).".ics";
-        //生成文件保存
-        $file_res=Storage::put("ics\\".$file_name,$ics);
-        if($file_res){
-            //TODO:生成下载链接，保存到数据库
-            $file_link=$file_name;
-            return $this->success("ical文件生成成功！",['url'=>$file_link]);
-        }else{
-            return $this->error(['error'=>"ical文件生成失败，请稍后再试！"]);
+            //Todo:能不能直接修改文件内容
+
+            if($ics_exist)
+                Storage::delete("ics\\".$ics_model->file_name);
+            $file_name=md5(time()).".ics";
+            //生成文件保存
+            $file_res=Storage::put("ics\\".$file_name,$ics);
+            if($file_res){
+                if($ics_exist){
+                    $ics_model->file_name=$file_name;
+                    $ics_model->save();
+                }else{
+                    Ics::create(
+                        [
+                            'uid'=>$this->_user->id,
+                            'file_name'=>$file_name
+                        ]
+                    );
+                }
+                $file_link=route("download.ics",['file_name'=>$file_name]);
+                return $this->success("ical文件生成成功！",['url'=>$file_link]);
+            }else{
+                return $this->error(['error'=>"ical文件生成失败，请稍后再试！"]);
+            }
+        }catch (\ErrorException $e){
+            return $this->error($e->getMessage());
         }
-
     }
 
-
+    /**
+     * 课程表ical文件下载
+     * @author mohuishou<1@lailin.xyz>
+     * @param $file_name 完整的文件名
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
     public function icsDownload($file_name){
         $path= storage_path("app/ics/".$file_name);
-        $header=['Content-Type:application/octet-stream'];
         return response()->download($path, "schedule.ics");
-
     }
 
     /**

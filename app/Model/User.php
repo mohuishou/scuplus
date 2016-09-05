@@ -37,6 +37,10 @@ class User extends BaseModel implements
         return $this->hasOne('App\Model\UserInfo','uid');
     }
 
+    public function ics(){
+        return $this->hasOne('App\Model\Ics','uid');
+    }
+
     public function evaluate(){
         return $this->hasMany('App\Model\Evaluate','uid');
     }
