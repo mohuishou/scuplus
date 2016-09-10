@@ -44,6 +44,8 @@ class UserPhoneController extends UserBaseController{
         $res=$user->save();
         if($res){
             return $this->success('注册成功！');
+        }else{
+            return $this->error('注册失败！');
         }
     }
 
@@ -87,9 +89,6 @@ class UserPhoneController extends UserBaseController{
         }else{
             Cache::put('verify.count.'.$phone,'1',60*12);
         }
-
-        return;
-
         //发送手机验证码
         $content="尊敬的用户您好：您的验证码为 $verify_code ,验证码2小时内有效，谢谢您的使用【川大加】";
         $res=$this->sendSms($phone,$content);

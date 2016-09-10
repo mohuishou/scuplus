@@ -34,7 +34,6 @@ class Controller extends BaseController
             return response()->json($msg,400);
         }
         return response()->json(["error"=>$msg],400);
-
     }
 
     /**
