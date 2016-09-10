@@ -118,8 +118,8 @@ class UserPhoneController extends UserBaseController{
             return false;
         }
         $result=json_decode($curl->response);
-        if($result['status']!=0){
-            Log::debug('短信发送错误！'.'Error: ' . $result['msg']);
+        if($result->status!=0){
+            Log::debug('短信发送错误！'.'Error: ' . $result->msg);
             return false;
         }
         return true;
