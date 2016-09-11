@@ -6,6 +6,7 @@
  * Time: 11:57
  */
 namespace App\Http\Controllers\User;
+use App\Model\User;
 use Curl\Curl;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
