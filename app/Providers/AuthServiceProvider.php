@@ -36,6 +36,10 @@ class AuthServiceProvider extends ServiceProvider
         Auth::viaRequest('api', function ($request) {
             if ($request->input('token')) {
                 $token=$request->input('token');
+            }else{
+                $token=$request->cookie('token');
+            }
+            if(isset($token)){
                 try{
                     $token_arr=json_decode(decrypt($token));
                     $token_now=Cache::get('user.token.'.$token_arr->uid);
@@ -44,8 +48,8 @@ class AuthServiceProvider extends ServiceProvider
                     }
                 }catch (DecryptException $e){
                 }
-
             }
+
         });
     }
 }
