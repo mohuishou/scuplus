@@ -54,7 +54,7 @@ class GradeController extends JwcBaseController
                     }
                 }
 
-                if(!$res){
+                if($res){
                     $grade=Grade::create($val);
                     if($grade){
                         if($cid) $course_data->updateAvgGrade($val['grade']);
