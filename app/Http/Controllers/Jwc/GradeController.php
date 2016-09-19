@@ -64,7 +64,8 @@ class GradeController extends JwcBaseController
 
             }
         }
-        return $this->success('成绩更新成功,更新成绩'.$count.'门',$data);
+        $grade_data=$this->_user->grade;
+        return $this->success('成绩更新成功,更新成绩'.$count.'门',$grade_data);
     }
 
 
