@@ -38,11 +38,13 @@ class GradeController extends JwcBaseController
                 $val['uid']=$this->_user->id;
 
 
-
+                //TODO：逻辑错误会出现重复插入的问题
                 //和已有的成绩对比，查看是否更新，防止使用firstOrCreate方法导致的查询时间过长的问题
                 $res=0;
                 foreach ($grade_data as &$value){
-                    if($value['termId']>$val['termId']) break;
+//                    //只更新当前
+//                    if($value['termId']>$val['termId']) break;
+
                     if($val['courseId']==$value['courseId']&&$val['lessonId']==$value['lessonId']){
                         $res=1;
                         if($value['grade']!=$val['grade']){
@@ -54,7 +56,7 @@ class GradeController extends JwcBaseController
                     }
                 }
 
-                if($res){
+                if(!$res){
                     $grade=Grade::create($val);
                     if($grade){
                         if($cid) $course_data->updateAvgGrade($val['grade']);
