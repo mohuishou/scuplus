@@ -62,8 +62,6 @@ $app->group(['namespace'=>'App\Http\Controllers\User','middleware' => 'auth'],fu
         'uses'=>'UserInfoController@bindJwc'
     ]);
 
-
-
     $app->get('/user',[
         'as'=>'user.info',
         'uses'=>'UserInfoController@index'
@@ -73,6 +71,7 @@ $app->group(['namespace'=>'App\Http\Controllers\User','middleware' => 'auth'],fu
         'as'=>'user.token.refresh',
         'uses'=>'UserController@refreshToken'
     ]);
+    
 
 
 
@@ -82,22 +81,27 @@ $app->get('/download/ics/{file_name}',[
     'as'=>'download.ics',
     'uses'=>'Jwc\ScheduleController@icsDownload'
 ]);
+/**
+ * 无需认证的教务处相关操作
+ */
+$app->group(['prefix'=>'/jwc','namespace' => 'App\Http\Controllers\Jwc'], function() use ($app) {
 
+    $app->post('/course', [
+        'as' => 'jwc.course',
+        'uses' => 'CourseController@index'
+    ]);
+
+    $app->post('/teacher', [
+        'as' => 'jwc.teacher',
+        'uses' => 'CourseController@teacher'
+    ]);
+});
 
 /**
  * 教务处相关操作
  */
 $app->group(['prefix'=>'/jwc','middleware' => 'auth','namespace' => 'App\Http\Controllers\Jwc'], function() use ($app) {
 
-    $app->post('/course',[
-        'as'=>'jwc.course',
-        'uses'=>'CourseController@index'
-    ]);
-
-    $app->post('/teacher',[
-        'as'=>'jwc.teacher',
-        'uses'=>'CourseController@teacher'
-    ]);
 
     $app->post('/schedule',[
         'as'=>'jwc.schedule.update',
