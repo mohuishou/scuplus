@@ -25,6 +25,7 @@ $app->group(['namespace'=>'App\Http\Controllers\User'],function ($app){
         'uses'=>'UserController@sendVerifyCode'
     ]);
 
+    //检测用户是否存在
     $app->post('/user/check',[
         'as'=>'user.check',
         'uses'=>'UserController@checkUser'
@@ -67,11 +68,19 @@ $app->group(['namespace'=>'App\Http\Controllers\User','middleware' => 'auth'],fu
         'uses'=>'UserInfoController@index'
     ]);
 
+    //检测用户是否登录
+    $app->get('/login/check',function (){
+        return [
+            "status"=>1,
+            "msg"=>"用户已登录"
+        ];
+    });
+
     $app->get('/token/refresh',[
         'as'=>'user.token.refresh',
         'uses'=>'UserController@refreshToken'
     ]);
-    
+
 
 
 
