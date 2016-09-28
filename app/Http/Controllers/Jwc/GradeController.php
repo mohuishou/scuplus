@@ -38,7 +38,6 @@ class GradeController extends JwcBaseController
                 $val['uid']=$this->_user->id;
 
 
-                //TODO：逻辑错误会出现重复插入的问题
                 //和已有的成绩对比，查看是否更新，防止使用firstOrCreate方法导致的查询时间过长的问题
                 $res=0;
                 foreach ($grade_data as &$value){
