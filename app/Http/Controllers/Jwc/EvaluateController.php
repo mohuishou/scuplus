@@ -78,6 +78,8 @@ class EvaluateController extends Controller{
         $eva_data=$this->_request->user()->evaluate()->where($map)->paginate(10);
         foreach ($eva_data as $v){
             $v->evaluateInfo;
+            $v->course;
+            $v->teacher;
         }
         return $this->success('获取成功！',$eva_data);
     }
