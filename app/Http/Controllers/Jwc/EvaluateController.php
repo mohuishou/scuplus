@@ -84,6 +84,24 @@ class EvaluateController extends Controller{
         return $this->success('获取成功！',$eva_data);
     }
 
+    public function getAll(){
+        $map=[];
+        if($this->_request->has('cid'))
+            $map['cid']=$this->_request->input('cid');
+        if($this->_request->has('tid'))
+            $map['tid']=$this->_request->input('tid');
+        if(empty($map)){
+            return $this->errorRequest("参数错误，cid，tid至少需要一个！");
+        }
+        $eva_data=Evaluate::where($map)->paginate(10);
+        foreach ($eva_data as $v){
+            $v->evaluateInfo;
+            $v->course;
+            $v->teacher;
+        }
+        return $this->success('获取成功！',$eva_data);
+    }
+
 
     /**
      * 更新评教信息，评分不能修改

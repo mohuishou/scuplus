@@ -158,5 +158,10 @@ $app->group(['prefix'=>'/jwc','middleware' => 'auth','namespace' => 'App\Http\Co
         'as'=>'jwc.evaluate.show',
         'uses'=>'EvaluateController@index'
     ]);
+
+    $app->get('/evaluate/all',[
+        'as'=>'jwc.evaluate.all',
+        'uses'=>'EvaluateController@getAll'
+    ]);
 });
 
