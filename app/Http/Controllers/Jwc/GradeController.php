@@ -21,7 +21,15 @@ class GradeController extends JwcBaseController
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function update(){
-        $data=$this->_jwc_obj->index();
+        try{
+            $data=$this->_jwc_obj->index();
+        }catch (\Exception $e){
+            $code=20000;
+            if($e->getCode()){
+                $code="2".$e->getCode();
+            }
+            return $this->error("教务处账号密码错误！",$code);
+        }
         $grade_data=$this->_user->grade()->orderBy('termId','desc')->get();
         $count=0;
         foreach ($data as $v){

@@ -221,7 +221,15 @@ EOD;
         }
 
         //获取当前所有课程
-        $data=$this->_jwc_obj->notFull();
+        try{
+            $data=$this->_jwc_obj->notFull();
+        }catch (\Exception $e){
+            $code=20000;
+            if($e->getCode()){
+                $code="2".$e->getCode();
+            }
+            return $this->error("教务处账号密码错误！",$code);
+        }
 
         $schedule_data['term']=$term;
         $schedule_data['uid']=$this->_user->id;

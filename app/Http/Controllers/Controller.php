@@ -29,11 +29,14 @@ class Controller extends BaseController
     }
 
 
-    public function error($msg){
+    public function error($msg,$code=10000){
         if(is_array($msg)){
             return response()->json($msg,400);
         }
-        return response()->json(["error"=>$msg],400);
+        return response()->json([
+            "error"=>$msg,
+            "code"=>$code
+        ],400);
     }
 
     /**
