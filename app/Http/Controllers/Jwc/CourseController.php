@@ -11,6 +11,7 @@ use App\Jobs\CourseJob;
 use App\Model\Course;
 use App\Model\Teacher;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 /**
  * 课程信息
@@ -46,7 +47,7 @@ class CourseController extends JwcBaseController{
             $map_like['name']=$this->_request->input('name');
 
         if($this->_request->has('college'))
-            $map_like['college']=$this->_request->input('college');
+            $map['college']=$this->_request->input('college');
 
         if($this->_request->has('day'))
             $map['day']=$this->_request->input('day');
@@ -112,7 +113,7 @@ class CourseController extends JwcBaseController{
         if($this->_request->has('name'))
             $map['name']=$this->_request->input('name');
         if($this->_request->has('college'))
-            $map_like['college']=$this->_request->input('college');
+            $map['college']=$this->_request->input('college');
 
         //排序方式，默认倒序，默认字段avg_star
         $order='avg_star';
@@ -124,7 +125,7 @@ class CourseController extends JwcBaseController{
         }
 
         $teacher=Teacher::where($map);
-        $teacher=$this->like($teacher,$map_like);
+//        $teacher=$this->like($teacher,$map_like);
         $teacher=$teacher->orderBy($order, 'desc')->paginate(10);
 
         foreach ($teacher as $k=>$v){
@@ -133,6 +134,29 @@ class CourseController extends JwcBaseController{
 
         return $this->success('数据获取成功！',$teacher);
 
+
+
+    }
+
+    /**
+     * 获取单个课程信息
+     * @return mixed
+     */
+    public function getOne(){
+        $this->validate($this->_request, [
+            'cid' => 'required'
+        ]);
+        $cid=$this->_request->input("cid");
+        $course=Course::find($cid);
+        if($this->_request->has("tid")){
+            $tid=$this->_request->input("tid");
+            $teacher=$course->teacher->find($tid);
+            $course=$course->toArray();//不转换的话下一步赋值不会成功
+            $course['teacher']=$teacher;
+        }else{
+            $course->teacher;
+        }
+        return $course;
 
 
     }

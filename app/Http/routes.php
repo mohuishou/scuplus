@@ -104,13 +104,19 @@ $app->group(['prefix'=>'/jwc','namespace' => 'App\Http\Controllers\Jwc'], functi
         'as' => 'jwc.teacher',
         'uses' => 'CourseController@teacher'
     ]);
+
+
+
 });
 
 /**
  * 教务处相关操作
  */
 $app->group(['prefix'=>'/jwc','middleware' => 'auth','namespace' => 'App\Http\Controllers\Jwc'], function() use ($app) {
-
+    $app->post('/course/one', [
+        'as' => 'jwc.course.one',
+        'uses' => 'CourseController@getOne'
+    ]);
 
     $app->post('/schedule',[
         'as'=>'jwc.schedule.update',
