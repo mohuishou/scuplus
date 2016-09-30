@@ -74,7 +74,12 @@ class CourseController extends JwcBaseController{
          */
         if($this->_request->has('teacher_name')){
             $teacher_name=$this->_request->input('teacher_name');
-            $teacher=Teacher::where('name',"like","%".$teacher_name."%")->paginate(10);
+            $teacher=Teacher::where('name',"like","%".$teacher_name."%");
+            if(isset($map["college"])){
+                $teacher=$teacher->where("college",$map["college"])->paginate(10);
+            }else{
+                $teacher=$teacher->paginate(10);;
+            }
             foreach ($teacher as $k=>&$v){
                 $course=$v->course()->where($map);
                 $course=$this->like($course,$map_like);
