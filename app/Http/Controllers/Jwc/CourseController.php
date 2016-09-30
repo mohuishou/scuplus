@@ -74,11 +74,14 @@ class CourseController extends JwcBaseController{
          */
         if($this->_request->has('teacher_name')){
             $teacher_name=$this->_request->input('teacher_name');
-            $teacher=Teacher::where('name',$teacher_name)->first();
-            $course=$teacher->course()->where($map);
-            $course=$this->like($course,$map_like);
-            $course=$course->orderBy($order, 'desc')->get();
-            $teacher->course=$course;
+            $teacher=Teacher::where('name',"like","%".$teacher_name."%")->paginate(10);
+            foreach ($teacher as $k=>&$v){
+                $course=$v->course()->where($map);
+                $course=$this->like($course,$map_like);
+                $course=$course->orderBy($order, 'desc')->get();
+                $v->course=$course;
+            }
+
             return $this->success('数据获取成功！',$teacher);
         }
 
@@ -111,7 +114,7 @@ class CourseController extends JwcBaseController{
         //模糊查询的字段
         $map_like=[];
         if($this->_request->has('name'))
-            $map['name']=$this->_request->input('name');
+            $map_like['name']=$this->_request->input('name');
         if($this->_request->has('college'))
             $map['college']=$this->_request->input('college');
 
@@ -125,7 +128,7 @@ class CourseController extends JwcBaseController{
         }
 
         $teacher=Teacher::where($map);
-//        $teacher=$this->like($teacher,$map_like);
+        $teacher=$this->like($teacher,$map_like);
         $teacher=$teacher->orderBy($order, 'desc')->paginate(10);
 
         foreach ($teacher as $k=>$v){
