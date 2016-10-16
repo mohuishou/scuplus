@@ -53,7 +53,7 @@ $app->group(['namespace'=>'App\Http\Controllers\User','middleware' => 'verify_co
     ]);
 });
 
-$app->group(['namespace'=>'App\Http\Controllers\User','middleware' => 'verify_code,auth'],function () use($app){
+$app->group(['namespace'=>'App\Http\Controllers\User','middleware' => ['verify_code','auth']],function () use($app){
 
     /**
      * 绑定检查

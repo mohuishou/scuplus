@@ -68,6 +68,13 @@ class UserController extends Controller
      * @return \Laravel\Lumen\Http\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function bind($type){
+        //验证是否可以绑定
+        $user=$this->_request->user();
+        //缓存15分钟，15分钟之内可以进行绑定，超过15分钟不允许绑定
+        $bind_check=Cache::get("user.bind.check.".$user->id);
+        if(!$bind_check){
+            return $this->error("尚未验证账号，或验证期限已过，请重新验证！",24085);
+        }
         if(!is_numeric($type))
             return $this->errorRequest(['type'=>'绑定类型错误，type必须为数字']);
 
@@ -87,7 +94,7 @@ class UserController extends Controller
     public function bindCheck(){
         $user=$this->_request->user();
         //缓存15分钟，15分钟之内可以进行绑定，超过15分钟不允许绑定
-        Cache::put("user.bind.check.".$user->id,$user->id,15);
+        Cache::put("user.bind.check.".$user->id,1,15);
         return $this->success("验证成功，请在15分钟以内完成操作！");
     }
 
