@@ -51,8 +51,25 @@ $app->group(['namespace'=>'App\Http\Controllers\User','middleware' => 'verify_co
         'as'=>'user.password.update',
         'uses'=>'UserController@updatePassword'
     ]);
+});
 
+$app->group(['namespace'=>'App\Http\Controllers\User','middleware' => 'verify_code,auth'],function () use($app){
 
+    /**
+     * 绑定检查
+     */
+    $app->post("/user/bind/check",[
+        'as'=>'user.bind.check',
+        'uses'=>'UserController@bindCheck'
+    ]);
+
+    /**
+     * 绑定
+     */
+    $app->post("/user/bind/{type}",[
+        'as'=>'user.bind',
+        'uses'=>'UserController@bind'
+    ]);
 });
 /**
  * 需要认证的用户相关操作
