@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Log;
 
 class UserPhoneController extends UserBaseController{
 
+    /**
+     * 登录
+     * @return \Laravel\Lumen\Http\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function login()
     {
         $this->validate($this->_request, [
@@ -31,6 +35,10 @@ class UserPhoneController extends UserBaseController{
         return $this->success('登陆成功！',['token'=>$token]);
     }
 
+    /**
+     * 注册
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function register()
     {
         $this->validate($this->_request, [
@@ -50,6 +58,27 @@ class UserPhoneController extends UserBaseController{
         }
     }
 
+    /**
+     * 绑定手机号
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function bind(){
+        $this->validate($this->_request, [
+            'phone' => 'required|unique:user',
+        ]);
+        $phone=$this->_request->input('phone');
+        $user=$this->_request->user();
+        $user->phone=$phone;
+        if($user->save()){
+            return $this->success("手机".$phone."绑定成功",$phone);
+        }
+        return $this->error("手机".$phone."绑定失败！");
+    }
+
+    /**
+     * 发送验证码
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function sendVerifyCode()
     {
         $this->validate($this->_request, [

@@ -9,7 +9,10 @@ class UserEmailController extends UserBaseController
 {
 
 
-
+    /**
+     * 登录
+     * @return \Laravel\Lumen\Http\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function login(){
         $this->validate($this->_request, [
             'password' => 'required|min:32|max:32',  //只接受md5加密的密码字符串
@@ -105,6 +108,23 @@ class UserEmailController extends UserBaseController
 
             return $this->success('验证码邮件已发送，等待查收！');
         }
+    }
+
+    /**
+     * 绑定邮箱
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function bind(){
+        $this->validate($this->_request, [
+            'email' => 'required|email|unique:user',
+        ]);
+        $email=$this->_request->input('email');
+        $user=$this->_request->user();
+        $user->email=$email;
+        if($user->save()){
+            return $this->success("邮箱".$email."绑定成功",$email);
+        }
+        return $this->error("邮箱".$email."绑定失败！");
     }
 
 

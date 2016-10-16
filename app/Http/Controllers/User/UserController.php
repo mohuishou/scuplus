@@ -63,6 +63,35 @@ class UserController extends Controller
     }
 
     /**
+     * 绑定
+     * @param $type
+     * @return \Laravel\Lumen\Http\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
+    public function bind($type){
+        if(!is_numeric($type))
+            return $this->errorRequest(['type'=>'绑定类型错误，type必须为数字']);
+
+        $user_type=$this->userType($type);
+
+        if($user_type){
+            return $user_type->bind();
+        }else{
+            return $this->errorRequest(['type'=>'不存在该类型']);
+        }
+    }
+
+    /**
+     * 验证绑定
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function bindCheck(){
+        $user=$this->_request->user();
+        //缓存15分钟，15分钟之内可以进行绑定，超过15分钟不允许绑定
+        Cache::put("user.bind.check.".$user->id,$user->id,15);
+        return $this->success("验证成功，请在15分钟以内完成操作！");
+    }
+
+    /**
      * 发送验证码
      * @author mohuishou<1@lailin.xyz>
      * @param $type
