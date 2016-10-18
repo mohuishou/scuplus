@@ -30,6 +30,7 @@ class ScheduleController extends JwcBaseController{
         foreach ($data as $k => &$v){
             $v->course;
             $v->course->teacher;
+            $v->course->evaluate;
         }
         return $this->success('课程信息获取成功',$data);
     }
