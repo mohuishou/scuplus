@@ -61,4 +61,9 @@ class Course extends BaseModel{
     public function grade(){
         return $this->hasMany('App\Model\Grade', 'cid');
     }
+    public function evaluateInfo(){
+        return $this->hasManyThrough('App\Model\EvaluateInfo', 'App\Model\Evaluate','cid','eid');
+    }
+
+
 }

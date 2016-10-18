@@ -50,8 +50,12 @@ class Teacher extends BaseModel
         return $this->belongsToMany('App\Model\Course', 'course_teacher', 'tid', 'cid');
     }
 
-    public function evalute(){
-        return $this->hasMany('App\Model\Evalute', 'tid');
+    public function evaluate(){
+        return $this->hasMany('App\Model\Evaluate', 'tid');
+    }
+
+    public function evaluateInfo(){
+        return $this->hasManyThrough('App\Model\EvaluateInfo', 'App\Model\Evaluate','tid','eid');
     }
 
 

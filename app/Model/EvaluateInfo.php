@@ -18,4 +18,12 @@ class EvaluateInfo extends BaseModel
     public function evaluate(){
         return $this->belongsTo('App\Model\Evaluate', 'eid');
     }
+
+    public function teacher(){
+        return $this->hasManyThrough('App\Model\Teacher', 'App\Model\Evaluate','eid','tid');
+    }
+
+    public function course(){
+        return $this->hasManyThrough('App\Model\Course', 'App\Model\Evaluate','eid','cid');
+    }
 }
