@@ -52,4 +52,8 @@ class User extends BaseModel implements
     public function grade(){
         return $this->hasMany('App\Model\Grade','uid');
     }
+
+    public function exam(){
+        return $this->hasMany('App\Model\Exam','uid');
+    }
 }

@@ -180,5 +180,15 @@ $app->group(['prefix'=>'/jwc','middleware' => 'auth','namespace' => 'App\Http\Co
         'as'=>'jwc.evaluate.all',
         'uses'=>'EvaluateController@getAll'
     ]);
+
+    $app->get('/exam',[
+        'as'=>'jwc.exam.show',
+        'uses'=>'ExamController@index'
+    ]);
+
+    $app->post('/exam',[
+        'as'=>'jwc.exam.update',
+        'uses'=>'ExamController@update'
+    ]);
 });
 
