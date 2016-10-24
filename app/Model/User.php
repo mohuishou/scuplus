@@ -102,6 +102,6 @@ class User extends BaseModel implements
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function userLibrary(){
-        return $this->hasMany('App\Model\UserLibrary','uid');
+        return $this->hasOne('App\Model\UserLibrary','uid');
     }
 }

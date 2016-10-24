@@ -33,11 +33,10 @@ class HistoryController extends Controller{
      */
     public function update()
     {
-        //TODO:图书馆账号绑定完成之后，改过
-        $sid=$this->_request->user()->sid;
-        $spassword=decrypt($this->_request->user()->spassword);
+        $id=$this->_request->user()->userLibrary->library_id;
+        $password=decrypt($this->_request->user()->userLibrary->library_password);
         try{
-            $library=new Library($sid,$spassword);
+            $library=new Library($id,$password);
             $data=$library->loanHistory();
         }catch (\Exception $e){
             return $this->error($e->getMessage());

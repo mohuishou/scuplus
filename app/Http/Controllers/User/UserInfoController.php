@@ -87,7 +87,8 @@ class UserInfoController extends Controller
 
         $user_library_model=UserLibrary::firstOrCreate(['uid'=>$this->_request->user()->id]);
         $user_library_model->library_id=$library_id;
-        $user_library_model->library_password=$library_password;
+        $user_library_model->library_password=encrypt($library_password);
+
         if($user_library_model->save()){
             //TODO:添加到后台更新队列当中，更新当前用户有关图书馆的所有信息
             return $this->success("图书馆账号绑定成功！");
