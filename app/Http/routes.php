@@ -192,3 +192,27 @@ $app->group(['prefix'=>'/jwc','middleware' => 'auth','namespace' => 'App\Http\Co
     ]);
 });
 
+/**
+ * 图书馆相关api
+ */
+$app->group(['prefix'=>'/library','middleware' => 'auth','namespace' => 'App\Http\Controllers\Library'], function() use ($app) {
+    $app->post('/history',[
+        'as'=>'library.history.update',
+        'uses'=>'HistoryController@update'
+    ]);
+
+    $app->get('/history',[
+        'as'=>'library.history.show',
+        'uses'=>'HistoryController@index'
+    ]);
+
+    $app->post('/now',[
+        'as'=>'library.now.update',
+        'uses'=>'NowController@update'
+    ]);
+
+    $app->get('/now',[
+        'as'=>'library.now.show',
+        'uses'=>'NowController@index'
+    ]);
+});

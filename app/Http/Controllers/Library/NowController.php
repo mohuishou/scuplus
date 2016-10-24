@@ -7,13 +7,48 @@
  */
 
 namespace App\Http\Controllers\Library;
-
+use App\Http\Controllers\Controller;
+use App\Model\LibraryNow;
+use Mohuishou\Lib\Library;
 /**
  * 当前借阅信息
  * Class NowController
  * @package App\Http\Controllers\Library
  */
-class NowController
+class NowController extends  Controller
 {
+    /**
+     * 当前借阅历史
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function index()
+    {
+        return $this->success("当前借阅信息获取成功！",$this->_request->user()->libraryNow);
+    }
 
+    public function update()
+    {
+        //TODO:图书馆账号绑定完成之后，改过
+        $sid=$this->_request->user()->sid;
+        $spassword=decrypt($this->_request->user()->spassword);
+        try{
+            $library=new Library($sid,$spassword);
+            $data=$library->loanNow();
+        }catch (\Exception $e){
+            return $this->error($e->getMessage());
+        }
+
+        $library_now_model=new LibraryNow();
+        $uid=$this->_request->user()->id;
+        $library_now_model->where("uid",$uid)->delete();
+
+        $count=0;
+        foreach ($data as $k=>$v){
+            $v["uid"]=$uid;
+            $library_now_model->create($v);
+            $count+=$library_now_model->save();
+        }
+        return $this->success("当前借阅信息更新成功！成功更新 $count 条",$this->_request->user()->libraryNow);
+
+    }
 }

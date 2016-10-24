@@ -18,11 +18,6 @@ use Mohuishou\Lib\Library;
  */
 class HistoryController extends Controller{
 
-    public function __construct()
-    {
-
-    }
-
     /**
      * 获取借阅历史
      * @return \Symfony\Component\HttpFoundation\Response
@@ -32,8 +27,13 @@ class HistoryController extends Controller{
         return $this->success("借阅历史获取成功！",$this->_request->user()->libraryHistory);
     }
 
+    /**
+     * 更新借阅历史
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function update()
     {
+        //TODO:图书馆账号绑定完成之后，改过
         $sid=$this->_request->user()->sid;
         $spassword=decrypt($this->_request->user()->spassword);
         try{
@@ -43,11 +43,20 @@ class HistoryController extends Controller{
             return $this->error($e->getMessage());
         }
 
-        $library_history=new LibraryHistory();
+        $library_history_model=new LibraryHistory();
+        $uid=$this->_request->user()->id;
+        $library_history_data=$library_history_model->where("uid",$uid)->first();
 
+        $count=0;
         foreach ($data as $k=>$v){
-
+            if($library_history_data["end_time"]==$v["end_time"]){
+                break;
+            }
+            $v["uid"]=$uid;
+            $library_history_model->create($v);
+            $count+=$library_history_model->save();
         }
+        return $this->success("历史借阅信息更新成功！成功更新 $count 条",$this->_request->user()->libraryHistory);
 
 
     }

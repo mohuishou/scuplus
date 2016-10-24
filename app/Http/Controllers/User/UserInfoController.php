@@ -63,5 +63,15 @@ class UserInfoController extends Controller
 
     }
 
+    /**
+     * 绑定图书馆
+     */
+    public function bindLibrary(){
+        $this->validate($this->_request, [
+            'lib_id' => 'required|min:10',
+            'lib_password' => 'required|min:6|max:20',
+        ]);
+    }
+
 
 }
