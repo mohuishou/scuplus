@@ -96,4 +96,12 @@ class User extends BaseModel implements
     public function libraryNow(){
         return $this->hasMany('App\Model\LibraryNow','uid');
     }
+
+    /**
+     * 图书馆账号绑定
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function userLibrary(){
+        return $this->hasMany('App\Model\UserLibrary','uid');
+    }
 }

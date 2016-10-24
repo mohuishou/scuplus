@@ -83,6 +83,12 @@ $app->group(['namespace'=>'App\Http\Controllers\User','middleware' => 'auth'],fu
         'uses'=>'UserInfoController@bindJwc'
     ]);
 
+    //绑定图书馆
+    $app->post('/library/bind',[
+        'as'=>'library.bind',
+        'uses'=>'UserInfoController@bindLibrary'
+    ]);
+
     $app->get('/user',[
         'as'=>'user.info',
         'uses'=>'UserInfoController@index'

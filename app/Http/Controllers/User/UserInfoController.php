@@ -2,6 +2,8 @@
 namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Model\UserInfo;
+use App\Model\UserLibrary;
+use Mohuishou\Lib\Library;
 use Mohuishou\Lib\ScuplusJwc;
 
 class UserInfoController extends Controller
@@ -56,6 +58,8 @@ class UserInfoController extends Controller
                 }
             }
             if($userinfo_model->save()){
+
+                //TODO:添加到后台更新队列当中，更新当前用户有关教务处的所有信息
                 return $this->success('教务处绑定成功！，用户信息更新成功！');
             };
         }
@@ -65,12 +69,31 @@ class UserInfoController extends Controller
 
     /**
      * 绑定图书馆
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function bindLibrary(){
         $this->validate($this->_request, [
-            'lib_id' => 'required|min:10',
-            'lib_password' => 'required|min:6|max:20',
+            'library_id' => 'required|min:10',
+            'library_password' => 'required|min:6|max:20',
         ]);
+        $library_id=$this->_request->input("library_id");
+        $library_password=$this->_request->input("library_password");
+        try{
+            $library=new Library($library_id,$library_password);
+            $library->loanNow();
+        }catch (\Exception $e){
+            return $this->error($e->getMessage());
+        }
+
+        $user_library_model=UserLibrary::firstOrCreate(['uid'=>$this->_request->user()->id]);
+        $user_library_model->library_id=$library_id;
+        $user_library_model->library_password=$library_password;
+        if($user_library_model->save()){
+            //TODO:添加到后台更新队列当中，更新当前用户有关图书馆的所有信息
+            return $this->success("图书馆账号绑定成功！");
+        }
+        return $this->error("图书馆账号绑定失败！");
+
     }
 
 
