@@ -33,34 +33,66 @@ class User extends BaseModel implements
         'password','spassword'
     ];
 
+    /**
+     * 用户信息
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function userinfo(){
         return $this->hasOne('App\Model\UserInfo','uid');
     }
 
+    /**
+     * 日历ics文件
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function ics(){
         return $this->hasOne('App\Model\Ics','uid');
     }
 
+    /**
+     * 评教
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function evaluate(){
         return $this->hasMany('App\Model\Evaluate','uid');
     }
 
+    /**
+     * 课程表
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function schedule(){
         return $this->hasMany('App\Model\Schedule','uid');
     }
 
+    /**
+     * 成绩/绩点
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function grade(){
         return $this->hasMany('App\Model\Grade','uid');
     }
 
+    /**
+     * 考表相关
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function exam(){
         return $this->hasMany('App\Model\Exam','uid');
     }
 
+    /**
+     * 图书馆历史借阅
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function libraryHistory(){
         return $this->hasMany('App\Model\LibraryHistory','uid');
     }
 
+    /**
+     * 图书馆当前借阅
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function libraryNow(){
         return $this->hasMany('App\Model\LibraryNow','uid');
     }
