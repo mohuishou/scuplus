@@ -12,7 +12,8 @@
         "guzzlehttp/guzzle": "^6.2",
         "jeremeamia/SuperClosure": "^2.2",
         "mohuishou/scuplus-jwc-package": "dev-master",
-        "league/flysystem": "^1.0"
+        "league/flysystem": "^1.0",
+        "mohuishou/scuplus-library-package": "^0.1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

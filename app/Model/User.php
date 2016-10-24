@@ -56,4 +56,12 @@ class User extends BaseModel implements
     public function exam(){
         return $this->hasMany('App\Model\Exam','uid');
     }
+
+    public function libraryHistory(){
+        return $this->hasMany('App\Model\LibraryHistory','uid');
+    }
+
+    public function libraryNow(){
+        return $this->hasMany('App\Model\LibraryNow','uid');
+    }
 }
