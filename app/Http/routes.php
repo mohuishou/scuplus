@@ -228,4 +228,14 @@ $app->group(['prefix'=>'/library','middleware' => 'auth','namespace' => 'App\Htt
         'as'=>'library.now.show',
         'uses'=>'NowController@index'
     ]);
+
+    $app->post('/loan/one',[
+        'as'=>'library.loan.one',
+        'uses'=>'LoanController@one'
+    ]);
+
+    $app->post('/loan/all',[
+        'as'=>'library.now.all',
+        'uses'=>'LoanController@all'
+    ]);
 });
