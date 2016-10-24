@@ -7,15 +7,13 @@
  */
 
 namespace App\Http\Controllers\Library;
-use App\Http\Controllers\Controller;
 use App\Model\LibraryNow;
-use Mohuishou\Lib\Library;
 /**
  * 当前借阅信息
  * Class NowController
  * @package App\Http\Controllers\Library
  */
-class NowController extends  Controller
+class NowController extends  LibraryBaseController
 {
     /**
      * 当前借阅历史
@@ -23,22 +21,19 @@ class NowController extends  Controller
      */
     public function index()
     {
-        return $this->success("当前借阅信息获取成功！",$this->_request->user()->libraryNow);
+        return $this->success("当前借阅信息获取成功！",$this->_user->libraryNow);
     }
 
     public function update()
     {
-        $id=$this->_request->user()->userLibrary->library_id;
-        $password=decrypt($this->_request->user()->userLibrary->library_password);
         try{
-            $library=new Library($id,$password);
-            $data=$library->loanNow();
+            $data=$this->_library->loanNow();
         }catch (\Exception $e){
             return $this->error($e->getMessage());
         }
 
         $library_now_model=new LibraryNow();
-        $uid=$this->_request->user()->id;
+        $uid=$this->_user->id;
         $library_now_model->where("uid",$uid)->delete();
 
         $count=0;
@@ -47,7 +42,7 @@ class NowController extends  Controller
             $library_now_model->create($v);
             $count+=$library_now_model->save();
         }
-        return $this->success("当前借阅信息更新成功！成功更新 $count 条",$this->_request->user()->libraryNow);
+        return $this->success("当前借阅信息更新成功！成功更新 $count 条",$this->_user->libraryNow);
 
     }
 }
