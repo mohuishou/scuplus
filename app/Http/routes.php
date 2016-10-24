@@ -53,6 +53,9 @@ $app->group(['namespace'=>'App\Http\Controllers\User','middleware' => 'verify_co
     ]);
 });
 
+/**
+ * 需要验证码，并且用户登录的路由
+ */
 $app->group(['namespace'=>'App\Http\Controllers\User','middleware' => ['verify_code','auth']],function () use($app){
 
     /**
@@ -103,10 +106,14 @@ $app->group(['namespace'=>'App\Http\Controllers\User','middleware' => 'auth'],fu
 
 });
 
+/**
+ * iCal文件下载
+ */
 $app->get('/download/ics/{file_name}',[
     'as'=>'download.ics',
     'uses'=>'Jwc\ScheduleController@icsDownload'
 ]);
+
 /**
  * 无需认证的教务处相关操作
  */
