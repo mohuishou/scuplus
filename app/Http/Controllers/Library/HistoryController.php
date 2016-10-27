@@ -46,8 +46,8 @@ class HistoryController extends LibraryBaseController{
                 break;
             }
             $v["uid"]=$uid;
-            $library_history_model->create($v);
-            $count+=$library_history_model->save();
+            $lib=$library_history_model->create($v);
+            $count+=$lib->save();
         }
         return $this->success("历史借阅信息更新成功！成功更新 $count 条",$this->_user->libraryHistory);
 

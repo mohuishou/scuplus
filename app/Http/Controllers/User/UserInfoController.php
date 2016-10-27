@@ -86,6 +86,7 @@ class UserInfoController extends Controller
         }
 
         $user_library_model=UserLibrary::firstOrCreate(['uid'=>$this->_request->user()->id]);
+        $user_library_model->verify=1;
         $user_library_model->library_id=$library_id;
         $user_library_model->library_password=encrypt($library_password);
 
