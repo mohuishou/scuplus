@@ -21,16 +21,16 @@ class Teacher extends BaseModel
      * @param $grade
      * @return bool|int
      */
-    public function updateAvgGrade($grade){
-        $data['count_grade']=$this->count_grade+1;
-        $data['avg_grade']=($this->count_grade*$this->avg_grade+$grade)/($data['count_grade']);
-
+    public function updateAvgGrade($grade,$is_create=true){
+        $data['count_grade']=$this->count_grade;
+        $data['avg_grade']=($this->count_grade*$this->avg_grade+$grade)/($data['count_grade']+1);
         //计算通过率/挂科率
         if($grade>=60){
-            $data['pass_rate']=($this->count_grade*$this->pass_rate+1)/($data['count_grade']);
+            $data['pass_rate']=($this->count_grade*$this->pass_rate+1)/($data['count_grade']+1);
         }else{
-            $data['pass_rate']=($this->count_grade*$this->pass_rate)/($data['count_grade']);
+            $data['pass_rate']=($this->count_grade*$this->pass_rate)/($data['count_grade']+1);
         }
+        if($is_create) $data['count_grade']=$this->count_grade+1;
         return $this->update($data);
     }
 
@@ -42,7 +42,7 @@ class Teacher extends BaseModel
      */
     public function updateAvgStar($stars){
         $data['count_star']=$this->count_star+1;
-        $data['avg_star']=($this->count_star*$this->avg_grade+$stars)/($data['count_star']);
+        $data['avg_star']=($this->count_star*$this->avg_star+$stars)/($data['count_star']);
         return $this->update($data);
     }
 

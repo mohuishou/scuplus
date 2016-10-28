@@ -47,23 +47,23 @@ class GradeController extends JwcBaseController
 
 
                 //和已有的成绩对比，查看是否更新，防止使用firstOrCreate方法导致的查询时间过长的问题
-                $res=0;
+                //判断是否已存在该成绩的标志，0：不存在，1存在
+                $flag=0;
                 foreach ($grade_data as &$value){
-//                    //只更新当前
-//                    if($value['termId']>$val['termId']) break;
-
+                    //如果已存在该成绩，则更新成绩，只更新平均分，不再添加上课人次
                     if($val['courseId']==$value['courseId']&&$val['lessonId']==$value['lessonId']){
-                        $res=1;
+                        $flag=1;
                         if($value['grade']!=$val['grade']){
                             $value->update($val);
                             $count++;
-                            if($cid) $course_data->updateAvgGrade($val['grade']);
+                            if($cid) $course_data->updateAvgGrade($val['grade'],false);
                         }
                         break;
                     }
                 }
 
-                if(!$res){
+                //不存在该成绩，新增成绩，并再相应课程更新
+                if(!$flag){
                     $grade=Grade::create($val);
                     if($grade){
                         if($cid) $course_data->updateAvgGrade($val['grade']);
