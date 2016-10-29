@@ -7,6 +7,10 @@
  */
 
 namespace App\Jobs\Message;
+use App\Model\Message;
+use App\Model\User;
+use Illuminate\Mail\Mailer;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class EmailJob 消息通知-邮件通知队列
@@ -14,23 +18,37 @@ namespace App\Jobs\Message;
  */
 class EmailJob extends BaseJob
 {
+    protected $_user;
+    protected $_message;
+    protected $_args;
+
+
     /**
-     * Create a new job instance.
-     *
-     * @return void
+     * EmailJob constructor.
+     * @param User $user
+     * @param Message $message
      */
-    public function __construct()
+    public function __construct(User $user,Message $message,$args)
     {
-        //
+        $this->_message=$message;
+        $this->_user=$user;
+        $this->_args=$args;
+        if($message->type!=1) {
+            Log::warning("消息通知类型错误");
+            return;
+        }
     }
 
     /**
-     * Execute the job.
-     *
-     * @return void
+     * @param Mailer $mailer
      */
-    public function handle()
+    public function handle(Mailer $mailer)
     {
-        //
+        $mailer->send("message.".$this->_message->template_name,["data"=>$this->_args],function ($m){
+            $m->from("admin@scuplus.cn","SCUPLUS");
+            $m->to($this->_user->email)->subject('【SCUPLUS】'.$this->_message->name);
+        });
     }
+
+
 }
