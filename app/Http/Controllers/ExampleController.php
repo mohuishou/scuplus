@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\EmailJob;
+use App\Jobs\Message\MessageJob;
+use App\Model\User;
 use Illuminate\Support\Facades\Mail;
 class ExampleController extends Controller
 {
@@ -16,14 +18,10 @@ class ExampleController extends Controller
         //
     }
 
-    public function emailTest(){
+    public function test(){
 
-        $this->dispatch(new EmailJob());
-        $a=Mail::send('emails.email',['testVar'=>123],function ($m){
-            $b=$m->to('306755605@qq.com')->subject('测试');
-//            print_r($b);
-        });
-        print_r($a);
+        $user=User::find(10);
+        $this->dispatch(new MessageJob($user,"grade",[],"weChat"));
     }
 
     //

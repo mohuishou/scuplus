@@ -15,6 +15,10 @@ $app->get('/',function (){
     return response()->json('welcome to scuplus api');
 });
 
+$app->get('/test',[
+    "uses"=>"ExampleController@test"
+]);
+
 /**
  * 用户相关操作
  */
