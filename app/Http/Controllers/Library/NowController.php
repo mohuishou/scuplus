@@ -8,6 +8,8 @@
 
 namespace App\Http\Controllers\Library;
 use App\Model\LibraryNow;
+use App\Model\User;
+
 /**
  * 当前借阅信息
  * Class NowController
@@ -26,6 +28,17 @@ class NowController extends  LibraryBaseController
 
     public function update()
     {
+        $res=$this->updateBase($this->_user);
+        if($res["status"]!=1){
+            return $this->error($res["msg"]);
+        }
+        return $this->success("当前借阅信息更新成功！成功更新 {$res['count']} 条",$this->_user->libraryNow);
+
+    }
+
+    public function updateBase(User $user)
+    {
+        parent::updateBase($user);
         try{
             $data=$this->_library->loanNow();
         }catch (\Exception $e){
@@ -36,13 +49,12 @@ class NowController extends  LibraryBaseController
         $uid=$this->_user->id;
         $library_now_model->where("uid",$uid)->delete();
 
-        $count=0;
         foreach ($data as $k=>$v){
             $v["uid"]=$uid;
             $library_now_model->create($v);
-            $count+=$library_now_model->save();
+            $this->_update_return["count"]+=$library_now_model->save();
         }
-        return $this->success("当前借阅信息更新成功！成功更新 $count 条",$this->_user->libraryNow);
-
+        $this->_update_return["data"]=$user->libraryNow();
+        return $this->_update_return;
     }
 }

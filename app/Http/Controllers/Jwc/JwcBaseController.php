@@ -61,23 +61,6 @@ class JwcBaseController extends Controller{
     }
 
     /**
-     * 更新返回
-     * @param int $count
-     * @param array $data
-     * @param int $status
-     * @param string $msg
-     * @return array
-     */
-    protected function updateReturn($count=0,$data=[],$status=1,$msg=""){
-        return [
-            "status"=>$status,
-            "count"=>$count,
-            "data"=>$data,
-            "msg"=>$msg
-        ];
-    }
-
-    /**
      * 更新方法
      * @param User $user
      * @return mixed

@@ -7,7 +7,6 @@
  */
 
 namespace App\Http\Controllers\Library;
-use App\Http\Controllers\Controller;
 
 /**
  * 图书借阅
