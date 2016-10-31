@@ -68,6 +68,7 @@ class MessageJob extends BaseJob
         //邮箱是否绑定
         if(!$this->_user->email)
             return false;
+        //todo:检测是否开启邮箱通知
         $message_model=Message::where("type",1)->where("template_name",$this->_template_name)->first();
         dispatch(new EmailJob($this->_user,$message_model,$this->_args));
         return true;

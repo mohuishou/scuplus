@@ -11,7 +11,7 @@ use App\Model\User;
 
 class LibraryJob extends BaseJob
 {
-    public function __construct(User $user, $is_notify, $first)
+    public function __construct(User $user, $is_notify=false, $first="email")
     {
         parent::__construct($user, $is_notify, $first);
         if ($is_notify){

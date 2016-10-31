@@ -34,6 +34,7 @@ class JwcBaseController extends Controller{
 
     public function __construct(Request $request)
     {
+        //todo：判断教务处是否绑定成功
         parent::__construct($request);
         if(!empty($this->_request->user())){
             $sid=$this->_request->user()->sid;

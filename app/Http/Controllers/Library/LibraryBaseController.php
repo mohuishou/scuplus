@@ -25,6 +25,7 @@ class LibraryBaseController extends Controller{
     public function __construct(Request $request)
     {
         parent::__construct($request);
+        //todo:判断是否绑定了图书馆账号信息，如果没有绑定成功，直接返回错误
         if($this->_request->user()) {
             $this->_user = $this->_request->user();
             $id = $this->_user->userLibrary->library_id;
@@ -48,6 +49,7 @@ class LibraryBaseController extends Controller{
         $id=$this->_user->userLibrary->library_id;
         $password=decrypt($this->_user->userLibrary->library_password);
         $this->_library = new Library($id, $password);
+
     }
 
     public function updateBase(User $user){
