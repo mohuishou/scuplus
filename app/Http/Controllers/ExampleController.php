@@ -21,7 +21,7 @@ class ExampleController extends Controller
     public function test(){
 
         $user=User::find(10);
-        $this->dispatch(new MessageJob($user,"grade",[],"weChat"));
+        $this->dispatch(new MessageJob($user,"grade",[]));
     }
 
     //

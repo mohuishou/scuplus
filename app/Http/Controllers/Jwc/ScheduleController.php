@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Jwc;
 use App\Model\Course;
 use App\Model\Ics;
 use App\Model\Schedule;
+use App\Model\User;
 use Illuminate\Support\Facades\Storage;
 
 class ScheduleController extends JwcBaseController{
@@ -211,7 +212,32 @@ EOD;
      */
     public function update(){
 
-        $count=0;
+        $res=$this->updateBase($this->_user);
+        if(!$res["status"]!=1){
+            return $this->error($res["msg"]);
+        }
+        $term=$this->getTerm();
+        //从数据库获取课程表信息
+        $data=Schedule::where('term',$term)->get();
+        foreach ($data as $k => &$v){
+            $v->course;
+            $v->course->teacher;
+        }
+        return $this->success('课程数据更新成功！更新'.$res["count"].'门课程',$data);
+    }
+
+
+    /**
+     * 课程表更新
+     * @param User $user
+     * @return array
+     */
+    public function updateBase(User $user)
+    {
+        //不通过route调用时，request对象不存在user
+        if (!$this->_jwc_obj){
+            $this->init($user);
+        }
 
         $term=$this->getTerm();
         //是否存在相同学期课程数据
@@ -228,7 +254,9 @@ EOD;
             if($e->getCode()){
                 $code="2".$e->getCode();
             }
-            return $this->error("教务处账号密码错误！",$code);
+            $this->_update_return["status"]=$code;
+            $this->_update_return["msg"]="教务处账号密码错误";
+            return $this->_update_return;
         }
 
         $schedule_data['term']=$term;
@@ -245,7 +273,7 @@ EOD;
             foreach ($course_data as $val){
                 $schedule_data['cid']=$val['id'];
                 $res=Schedule::create($schedule_data);
-                if($res) $count++;
+                if($res) $this->_update_return["count"]++;
             }
         }
 
@@ -256,8 +284,8 @@ EOD;
             $v->course->teacher;
         }
 
-
-        return $this->success('课程数据更新成功！更新'.$count.'门课程',$data);
+        $this->_update_return["data"]=$data;
+        return $this->_update_return;
     }
 
     /**

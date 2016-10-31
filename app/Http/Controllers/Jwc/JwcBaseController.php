@@ -7,6 +7,7 @@
  */
 namespace App\Http\Controllers\Jwc;
 use App\Http\Controllers\Controller;
+use App\Model\User;
 use Illuminate\Http\Request;
 use Mohuishou\Lib\ScuplusJwc;
 
@@ -24,6 +25,13 @@ class JwcBaseController extends Controller{
 
     protected $_user;
 
+    protected $_update_return=[
+        "status"=>1,
+        "count"=>0,
+        "data"=>[],
+        "msg"=>""
+    ];
+
     public function __construct(Request $request)
     {
         parent::__construct($request);
@@ -35,8 +43,49 @@ class JwcBaseController extends Controller{
             $this->_jwc_name || $this->_jwc_name='Evaluate';
             $this->_jwc_obj=ScuplusJwc::create($this->_jwc_name,$sid,$spassword);
         }
+    }
 
+    protected function init(User $user){
+        $this->_update_return=[
+            "status"=>1,
+            "count"=>0,
+            "data"=>[],
+            "msg"=>""
+        ];
+        $sid=$user->sid;
+        $spassword=decrypt($user->spassword);
+        $this->_user=$user;
+        //初始化要操作的教务处类，默认为评教
+        $this->_jwc_name || $this->_jwc_name='Evaluate';
+        $this->_jwc_obj=ScuplusJwc::create($this->_jwc_name,$sid,$spassword);
+    }
 
+    /**
+     * 更新返回
+     * @param int $count
+     * @param array $data
+     * @param int $status
+     * @param string $msg
+     * @return array
+     */
+    protected function updateReturn($count=0,$data=[],$status=1,$msg=""){
+        return [
+            "status"=>$status,
+            "count"=>$count,
+            "data"=>$data,
+            "msg"=>$msg
+        ];
+    }
 
+    /**
+     * 更新方法
+     * @param User $user
+     * @return mixed
+     */
+    public function updateBase(User $user){
+        //不通过route调用时，request对象不存在user
+        if (!$this->_jwc_obj){
+            $this->init($user);
+        }
     }
 }

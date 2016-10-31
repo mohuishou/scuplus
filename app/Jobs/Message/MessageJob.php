@@ -57,7 +57,6 @@ class MessageJob extends BaseJob
     {
         echo "消息队列开始运行 \r\n";
         foreach ($this->_order as $fun){
-            echo $fun;
             if($this->$fun()){
                 break;
             }

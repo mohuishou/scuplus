@@ -7,6 +7,7 @@
  */
 namespace App\Http\Controllers\Jwc;
 use App\Model\Exam;
+use App\Model\User;
 
 class ExamController extends JwcBaseController{
     protected $_jwc_name="Exam";
@@ -20,6 +21,16 @@ class ExamController extends JwcBaseController{
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function update(){
+        $res=$this->updateBase($this->_user);
+        if(!$res["status"]!=1){
+            return $this->error($res["msg"]);
+        }
+        return $this->success("考表更新成功，更新".$res["count"]." 条考试信息",$res["data"]);
+    }
+
+    public function updateBase(User $user)
+    {
+        parent::updateBase($user);
         //获取当前所有课程
         try{
             $data=$this->_jwc_obj->index();
@@ -28,25 +39,23 @@ class ExamController extends JwcBaseController{
             if($e->getCode()){
                 $code="2".$e->getCode();
             }
-            return $this->error("教务处账号密码错误！",$code);
+            $this->_update_return["status"]=$code;
+            $this->_update_return["msg"]="教务处账号密码错误";
+            return $this->_update_return;
         }
+
 
         if(empty($data)){
-            return $this->success("更新成功，没有考试信息");
+            return $this->_update_return;
         }
-
-        $exam_model=Exam::firstOrCreate(["uid"=>$this->_user>id,"class_name"=>$data->class_name]);
-        $i=0;
         foreach ($data as $k=>$v){
+            $exam_model=Exam::firstOrCreate(["uid"=>$user>id,"class_name"=>$data->class_name]);
             if($exam_model->$k!=$v){
                 $exam_model->$k=$v;
-                $i++;
+                if($exam_model->save()) $this->_update_return["count"]++;
             }
         }
-
-        if($exam_model->save()){
-            return $this->success("考表更新成功！新增 {$i} 门课程考试信息！",$data);
-        }
-        return $this->error("考表更新失败，数据库错误！");
+        $this->_update_return["data"]=$data;
+        return $this->_update_return;
     }
 }
