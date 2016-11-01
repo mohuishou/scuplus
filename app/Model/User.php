@@ -104,4 +104,8 @@ class User extends BaseModel implements
     public function userLibrary(){
         return $this->hasOne('App\Model\UserLibrary','uid');
     }
+
+    public function userNotify(){
+        return $this->hasOne('App\Model\UserNotify','uid');
+    }
 }
