@@ -31,10 +31,12 @@ class UserNotifyController extends Controller{
     public function __construct(Request $request)
     {
         parent::__construct($request);
-        $this->validate($this->_request, [
-            'param' => 'required',
-            "status"=>"required|min:0|max:1|numeric"
-        ]);
+        if ($this->_request->has("param")){
+            $this->validate($this->_request, [
+                'param' => 'required',
+                "status"=>"required|min:0|max:1|numeric"
+            ]);
+        }
         $this->_user=$this->_request->user();
         if(isset($this->_user->userNotify)&&!empty($this->_user->userNotify)){
             $this->_notify_model=$this->_user->userNotify;
@@ -42,6 +44,26 @@ class UserNotifyController extends Controller{
             $this->_notify_model=UserNotify::firstOrCreate(["uid"=>$this->_user->id]);
         }
 
+    }
+
+    /**
+     * 默认通知方式
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function first(){
+        $this->validate($this->_request, [
+            'first' => 'required',
+        ]);
+        $first=$this->_request->input("first");
+        $check=in_array($first,["email","weChat","sms"]);
+        if(!$check){
+            return $this->error("参数错误！");
+        }
+        $this->_notify_model->first=$first;
+        if($this->_notify_model->save()){
+            return $this->success("更新成功",$this->_user->userNotify);
+        }
+        return $this->error("数据库错误");
     }
 
     /**

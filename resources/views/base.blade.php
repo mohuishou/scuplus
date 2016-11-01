@@ -15,10 +15,10 @@
         }
         a{
             text-decoration: none;
-            color: #333;
+            color: #0099CC !important;
         }
         a:hover{
-            color: #99cccc;
+            color: #336699 !important;
         }
         #main{
             max-width: 900px;
@@ -32,8 +32,7 @@
             margin-top:20px;
             padding:20px;
             background-color: #fff;
-            border-top: 2px solid #333244;
-            /*border: 1px solid #eee;*/
+            border: 1px solid #eee;
             -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27), 0 0 60px rgba(0, 0, 0, 0.06) inset;
             -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.06) inset;
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.06) inset;
@@ -85,7 +84,7 @@
         <div id="footer">
             <div>
                 <p>感谢使用scuplus，川大+，加你想要</p>
-                <p>如需退订，请登录scuplus个人中心，关闭消息服务</p>
+                <p>如需退订，请登录<a href="http://scuplus.cn/#!/user">scuplus个人中心</a>，关闭消息服务</p>
             </div>
             <a href="http://scuplus.cn">power by scuplus</a>
         </div>

@@ -31,18 +31,16 @@ class MessageJob extends BaseJob
      * @param $args
      * @param int $first
      */
-    public function __construct(User $user,$template_name,$args,$first=null)
+    public function __construct(User $user,$template_name,$args,$first="email")
     {
         $this->_user=$user;
         $this->_args=$args;
         $this->_template_name=$template_name;
 
         //消息通知优先级
-        if($first!=null){
-            if(isset($this->_order[$first])&&$this->_order[$first]>0){
-                $this->_order[$first]=0;
-            }
-        }
+        //todo:检测通知优先级
+        if(isset($this->_user->userNotify->first)) $first=$this->_user->userNotify->first;
+        $this->_order[$first]=0;
         $this->_order=array_flip($this->_order);
         ksort($this->_order);
 
@@ -68,7 +66,6 @@ class MessageJob extends BaseJob
         //邮箱是否绑定
         if(!$this->_user->email)
             return false;
-        //todo:检测是否开启邮箱通知
         $message_model=Message::where("type",1)->where("template_name",$this->_template_name)->first();
         dispatch(new EmailJob($this->_user,$message_model,$this->_args));
         return true;
