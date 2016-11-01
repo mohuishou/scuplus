@@ -14,8 +14,20 @@ use Illuminate\Http\Request;
 
 class UserNotifyController extends Controller{
 
+    /**
+     * @var mixed
+     */
     protected $_user;
 
+    /**
+     * @var
+     */
+    protected $_notify_model;
+
+    /**
+     * UserNotifyController constructor.
+     * @param Request $request
+     */
     public function __construct(Request $request)
     {
         parent::__construct($request);
@@ -24,20 +36,39 @@ class UserNotifyController extends Controller{
             "status"=>"required|min:0|max:1|numeric"
         ]);
         $this->_user=$this->_request->user();
+        if(isset($this->_user->userNotify)&&!empty($this->_user->userNotify)){
+            $this->_notify_model=$this->_user->userNotify;
+        }else{
+            $this->_notify_model=UserNotify::firstOrCreate(["uid"=>$this->_user->id]);
+        }
+
     }
 
-    public function index(){
-
-    }
-
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function jwc(){
-        $param="jwc_".$this->_request->input("param");
-        $status=$this->_request->input("status");
-        UserNotify::firstOrCreate(["uid"=>$this->_user->id]);
+        return $this->update("jwc");
     }
 
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function library(){
-        $param="jwc_".$this->_request->input("param");
+        return $this->update("library");
+    }
+
+    /**
+     * @param $pre
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function update($pre){
+        $param=$pre."_".$this->_request->input("param");
         $status=$this->_request->input("status");
+        $this->_notify_model->$param=$status;
+        if($this->_notify_model->save()){
+            return $this->success("更新成功",$this->_user->userNotify);
+        }
+        return $this->error("数据库错误");
     }
 }

@@ -105,6 +105,10 @@ class User extends BaseModel implements
         return $this->hasOne('App\Model\UserLibrary','uid');
     }
 
+    /**
+     * 用户提醒
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function userNotify(){
         return $this->hasOne('App\Model\UserNotify','uid');
     }
