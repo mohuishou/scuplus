@@ -29,7 +29,7 @@ class ExamJob extends BaseJob
     public function handle(ExamController $exam)
     {
         $res=$exam->updateBase($this->_user);
-        if($this->_is_notify && $res["status"]==1){
+        if($this->_is_notify && $res["status"]==1 && $res["count"]>0){
             //判断用户是否开启通知
             if($this->_user->userNotify->jwc_exam==1){
                 $message_job=(new MessageJob($this->_user,$this->_template_name,$res["data"]))->onQueue("message");

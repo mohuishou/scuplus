@@ -32,7 +32,7 @@ class NowController extends  LibraryBaseController
         if($res["status"]!=1){
             return $this->error($res["msg"]);
         }
-        return $this->success("当前借阅信息更新成功！成功更新 {$res['count']} 条",$this->_user->libraryNow);
+        return $this->success("当前借阅信息更新成功！",$this->_user->libraryNow);
 
     }
 
@@ -47,16 +47,28 @@ class NowController extends  LibraryBaseController
 
         $library_now_model=new LibraryNow();
         $uid=$this->_user->id;
-        $library_now_model->where("uid",$uid)->delete();
+        //判断是否更新
+//        $library_now_model->where("uid",$uid)->delete();
 
         foreach ($data as $k=>$v){
-            //todo:判断是否即将超期,如果有即将超期的书籍，记录
-            //end_day
+            //判断是否即将超期,如果有即将超期的书籍，记录
             $v["uid"]=$uid;
-            $library_now_model->create($v);
-            $this->_update_return["count"]+=$library_now_model->save();
+            $end=strtotime($v["end_day"]);
+            $rest=(time()-$end)/(60*60*24);
+            if($rest<5){
+                $this->_update_return["count"]++;
+                $this->_update_return["data"][]=$v;
+            }
+//            $library_now_model->create($v);
+            $library_now_model=$library_now_model->firstOrCreate([
+                "uid"=>$uid,
+                "review_id"=>$v["review_id"],
+            ]);
+            foreach ($v as $key => $value){
+                $library_now_model->$key=$value;
+            }
+            $library_now_model->save();
         }
-        $this->_update_return["data"]=$user->libraryNow();
         return $this->_update_return;
     }
 }
