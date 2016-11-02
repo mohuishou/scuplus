@@ -17,7 +17,6 @@ class BaseJob extends Job
     protected $_user;
     protected $_is_notify;
     protected $_template_name;
-    protected $_first;
 
     /**
      * BaseJob constructor.

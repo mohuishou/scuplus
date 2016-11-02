@@ -50,6 +50,8 @@ class NowController extends  LibraryBaseController
         $library_now_model->where("uid",$uid)->delete();
 
         foreach ($data as $k=>$v){
+            //todo:判断是否即将超期,如果有即将超期的书籍，记录
+            //end_day
             $v["uid"]=$uid;
             $library_now_model->create($v);
             $this->_update_return["count"]+=$library_now_model->save();

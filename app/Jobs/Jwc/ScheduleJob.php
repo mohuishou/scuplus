@@ -31,8 +31,11 @@ class ScheduleJob extends BaseJob
     {
         $res=$schedule->updateBase($this->_user);
         if($this->_is_notify && $res["status"]==1){
-            $message_job=(new MessageJob($this->_user,$this->_template_name,$res["data"]))->onQueue("message");
-            dispatch($message_job);
+            //判断用户是否开启通知
+            if($this->_user->userNotify->jwc_schedule==1){
+                $message_job=(new MessageJob($this->_user,$this->_template_name,$res["data"]))->onQueue("message");
+                dispatch($message_job);
+            }
         }
     }
 }

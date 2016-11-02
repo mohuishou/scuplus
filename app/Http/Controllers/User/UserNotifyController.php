@@ -70,6 +70,11 @@ class UserNotifyController extends Controller{
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function jwc(){
+        $param=$this->_request->input("param");
+        $check=in_array($param,["grade","schedule","exam"]);
+        if (!$check){
+            return $this->errorRequest(["param"=>"非法参数"]);
+        }
         return $this->update("jwc");
     }
 
@@ -77,6 +82,11 @@ class UserNotifyController extends Controller{
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function library(){
+        $param=$this->_request->input("param");
+        $check=in_array($param,["now"]);
+        if (!$check){
+            return $this->errorRequest(["param"=>"非法参数"]);
+        }
         return $this->update("library");
     }
 

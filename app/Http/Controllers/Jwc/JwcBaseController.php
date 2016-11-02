@@ -67,7 +67,12 @@ class JwcBaseController extends Controller{
         $this->_user=$user;
         //初始化要操作的教务处类，默认为评教
         $this->_jwc_name || $this->_jwc_name='Evaluate';
-        $this->_jwc_obj=ScuplusJwc::create($this->_jwc_name,$id,$password);
+        try {
+            $this->_jwc_obj=ScuplusJwc::create($this->_jwc_name,$id,$password);
+        } catch (\Exception $e) {
+            return $this->error($e->getMessage(),20000);
+        }
+
     }
 
     /**
