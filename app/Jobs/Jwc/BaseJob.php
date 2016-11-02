@@ -25,12 +25,9 @@ class BaseJob extends Job
      * @param bool $is_notify
      * @param string $first
      */
-    public function __construct(User $user,$is_notify=false,$first="email")
+    public function __construct(User $user,$is_notify=false)
     {
         $this->_user=$user;
         $this->_is_notify=$is_notify;
-        if ($is_notify){
-            $this->_first=$first;
-        }
     }
 }

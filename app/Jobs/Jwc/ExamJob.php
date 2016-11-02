@@ -13,9 +13,9 @@ use App\Model\User;
  */
 class ExamJob extends BaseJob
 {
-    public function __construct(User $user, $is_notify=false, $first="email")
+    public function __construct(User $user, $is_notify=false)
     {
-        parent::__construct($user, $is_notify, $first);
+        parent::__construct($user, $is_notify);
         if ($is_notify){
             $this->_template_name="exam";
         }
@@ -30,7 +30,8 @@ class ExamJob extends BaseJob
     {
         $res=$exam->updateBase($this->_user);
         if($this->_is_notify && $res["status"]==1){
-            dispatch(new MessageJob($this->_user,$this->_template_name,$res["data"],$this->_first));
+            $message_job=(new MessageJob($this->_user,$this->_template_name,$res["data"],$this->_first))->onQueue("message");
+            dispatch($message_job);
         }
     }
 }

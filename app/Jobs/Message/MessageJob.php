@@ -31,15 +31,18 @@ class MessageJob extends BaseJob
      * @param $args
      * @param int $first
      */
-    public function __construct(User $user,$template_name,$args,$first="email")
+    public function __construct(User $user,$template_name,$args)
     {
         $this->_user=$user;
         $this->_args=$args;
         $this->_template_name=$template_name;
 
         //消息通知优先级
-        //todo:检测通知优先级
-        if(isset($this->_user->userNotify->first)) $first=$this->_user->userNotify->first;
+        if(isset($this->_user->userNotify->first)) {
+            $first=$this->_user->userNotify->first;
+        }else{
+            $first="email";
+        }
         $this->_order[$first]=0;
         $this->_order=array_flip($this->_order);
         ksort($this->_order);
@@ -66,7 +69,8 @@ class MessageJob extends BaseJob
         if(!$this->_user->email)
             return false;
         $message_model=Message::where("type",1)->where("template_name",$this->_template_name)->first();
-        dispatch(new EmailJob($this->_user,$message_model,$this->_args));
+        $email_job=(new EmailJob($this->_user,$message_model,$this->_args))->onQueue("message");
+        dispatch($email_job);
         return true;
     }
 

@@ -10,7 +10,6 @@
 | and give it the Closure to call when that URI is requested.
 |
 */
-//define("BASE",'/project/scuplus-5.2/public');
 $app->get('/',function (){
     return response()->json('welcome to scuplus api');
 });

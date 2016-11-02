@@ -7,9 +7,9 @@ use App\Model\User;
 
 class JwcJob extends BaseJob
 {
-    public function __construct(User $user, $is_notify=false, $first="email")
+    public function __construct(User $user, $is_notify=false)
     {
-        parent::__construct($user, $is_notify, $first);
+        parent::__construct($user, $is_notify);
     }
 
     /**
