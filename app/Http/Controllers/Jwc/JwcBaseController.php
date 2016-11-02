@@ -32,33 +32,42 @@ class JwcBaseController extends Controller{
         "msg"=>""
     ];
 
+    /**
+     * JwcBaseController constructor.
+     * @param Request $request
+     */
     public function __construct(Request $request)
     {
-        //todo：判断教务处是否绑定成功
         parent::__construct($request);
         if(!empty($this->_request->user())){
-            $sid=$this->_request->user()->sid;
-            $spassword=decrypt($this->_request->user()->spassword);
-            $this->_user=$this->_request->user();
-            //初始化要操作的教务处类，默认为评教
-            $this->_jwc_name || $this->_jwc_name='Evaluate';
-            $this->_jwc_obj=ScuplusJwc::create($this->_jwc_name,$sid,$spassword);
+            $this->init($this->_request->user());
         }
     }
 
+    /**
+     * 初始化
+     * @param User $user
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     protected function init(User $user){
+
         $this->_update_return=[
             "status"=>1,
             "count"=>0,
             "data"=>[],
             "msg"=>""
         ];
-        $sid=$user->sid;
-        $spassword=decrypt($user->spassword);
+
+        $jwc=$user->userJwc;
+        if(!isset($jwc->verify)||$jwc->verify!=1){
+            return $this->error("教务处未绑定，或账号密码错误！",24011);
+        }
+        $id=$user->userJwc->jwcid;
+        $password=decrypt($user->userJwc->jwc_password);
         $this->_user=$user;
         //初始化要操作的教务处类，默认为评教
         $this->_jwc_name || $this->_jwc_name='Evaluate';
-        $this->_jwc_obj=ScuplusJwc::create($this->_jwc_name,$sid,$spassword);
+        $this->_jwc_obj=ScuplusJwc::create($this->_jwc_name,$id,$password);
     }
 
     /**

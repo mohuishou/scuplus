@@ -165,8 +165,6 @@ class CourseController extends JwcBaseController{
             $course->teacher;
         }
         return $this->success("获取成功！",$course);
-
-
     }
 
     /**

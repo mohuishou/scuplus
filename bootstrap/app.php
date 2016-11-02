@@ -55,7 +55,7 @@ $app->singleton(
 |
 | Next, we will register the middleware with the application. These can
 | be global middleware that run before and after each request into a
-| route or middleware that'll be assigned to some specific routes.
+| route or middleware that'll be assigned to some specific Routes.
 |
 */
 
@@ -89,7 +89,7 @@ $app->singleton(
 | Load The Application Routes
 |--------------------------------------------------------------------------
 |
-| Next we will include the routes file so that they can all be added to
+| Next we will include the Routes file so that they can all be added to
 | the application. This will provide all of the URLs the application
 | can respond to, as well as the controllers that may handle them.
 |
