@@ -193,6 +193,6 @@ class UserController extends Controller
             return new $classname($this->_request);
         }else{
             return false;
-        };
+        }
     }
 }

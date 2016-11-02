@@ -43,7 +43,6 @@ class MessageJob extends BaseJob
         $this->_order[$first]=0;
         $this->_order=array_flip($this->_order);
         ksort($this->_order);
-
     }
 
     /**

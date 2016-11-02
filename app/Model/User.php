@@ -106,6 +106,14 @@ class User extends BaseModel implements
     }
 
     /**
+     * 图书馆账号绑定
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function userJwc(){
+        return $this->hasOne('App\Model\UserJwc','uid');
+    }
+
+    /**
      * 用户提醒
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
