@@ -9,7 +9,7 @@
 namespace App\Model;
 
 
-class UserLibrary extends BaseModel
+class UserJwc extends BaseModel
 {
     protected $table = 'user_jwc';
 

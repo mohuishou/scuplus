@@ -1,6 +1,9 @@
 <?php
 namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
+use App\Jobs\Jwc\JwcJob;
+use App\Jobs\Library\LibraryJob;
+use App\Model\User;
 use App\Model\UserInfo;
 use App\Model\UserLibrary;
 use Mohuishou\Lib\Library;
@@ -21,6 +24,19 @@ class UserInfoController extends Controller
             return $this->success('用户信息获取成功！',$user);
         }
         return $this->error(['error'=>'用户信息获取失败']);
+    }
+
+    public function updateBase(User $user){
+        $jwc=$user->userJwc;
+        if(!isset($jwc->verify)||$jwc->verify!=1){
+            return $this->error("教务处未绑定，或账号密码错误",20000);
+        }
+        try{
+            $user_info=ScuplusJwc::create('Student',$jwc->jwc_id,$jwc->password)->index();
+        }catch (\Exception $e){
+            return $this->errorRequest(['error'=>$e->getMessage()]);
+        }
+
     }
 
     /**
@@ -58,8 +74,8 @@ class UserInfoController extends Controller
                 }
             }
             if($userinfo_model->save()){
-
-                //TODO:添加到后台更新队列当中，更新当前用户有关教务处的所有信息
+                $jwc_job=(new JwcJob($this->_request->user()))->onQueue("jwc");
+                $this->dispatch($jwc_job);
                 return $this->success('教务处绑定成功！，用户信息更新成功！');
             };
         }
@@ -91,7 +107,8 @@ class UserInfoController extends Controller
         $user_library_model->library_password=encrypt($library_password);
 
         if($user_library_model->save()){
-            //TODO:添加到后台更新队列当中，更新当前用户有关图书馆的所有信息
+            $library_job=(new LibraryJob($this->_request->user()))->onQueue("library");
+            $this->dispatch($library_job);
             return $this->success("图书馆账号绑定成功！");
         }
         return $this->error("图书馆账号绑定失败！");
