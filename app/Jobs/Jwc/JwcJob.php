@@ -17,11 +17,16 @@ class JwcJob extends BaseJob
      */
     public function handle()
     {
-        $exam=(new ExamJob($this->_user,$this->_is_notify,$this->_first))->onQueue("jwc");
+        $exam=(new ExamJob($this->_user,$this->_is_notify))->onQueue("jwc");
         dispatch($exam);
-        $grade=(new GradeJob($this->_user,$this->_is_notify,$this->_first))->onQueue("jwc");
+
+        $grade=(new GradeJob($this->_user,$this->_is_notify))->onQueue("jwc");
         dispatch($grade);
-        $schedule=(new ScheduleJob($this->_user,$this->_is_notify,$this->_first))->onQueue("jwc");
+
+        $schedule=(new ScheduleJob($this->_user,$this->_is_notify))->onQueue("jwc");
         dispatch($schedule);
+
+        $user_info=(new UserInfoJob($this->_user))->onQueue("jwc");
+        dispatch($user_info);
     }
 }

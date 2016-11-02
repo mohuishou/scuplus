@@ -53,7 +53,7 @@ class UserBindController extends Controller
                 //添加到后台更新队列当中，更新当前用户有关教务处的所有信息
                 $jwc_job=(new JwcJob($this->_request->user()))->onQueue("jwc");
                 $this->dispatch($jwc_job);
-                return $this->success('教务处绑定成功！，用户信息更新成功！');
+                return $this->success('教务处绑定成功！用户信息更新成功！');
             }
         }
         return $this->error('教务处绑定失败！数据库错误');
