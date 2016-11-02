@@ -84,18 +84,23 @@ $app->group(['namespace'=>'App\Http\Controllers\User','middleware' => ['verify_c
 $app->group(['namespace'=>'App\Http\Controllers\User','middleware' => 'auth'],function () use($app){
     $app->post('/jwc/bind',[
         'as'=>'jwc.bind',
-        'uses'=>'UserInfoController@bindJwc'
+        'uses'=>'UserBindController@jwc'
     ]);
 
     //绑定图书馆
     $app->post('/library/bind',[
         'as'=>'library.bind',
-        'uses'=>'UserInfoController@bindLibrary'
+        'uses'=>'UserBindController@library'
     ]);
 
     $app->get('/user',[
         'as'=>'user.info',
         'uses'=>'UserInfoController@index'
+    ]);
+
+    $app->post('/user/info',[
+        'as'=>'user.info',
+        'uses'=>'UserInfoController@update'
     ]);
 
     //检测用户是否登录
@@ -110,8 +115,6 @@ $app->group(['namespace'=>'App\Http\Controllers\User','middleware' => 'auth'],fu
         'as'=>'user.token.refresh',
         'uses'=>'UserController@refreshToken'
     ]);
-
-
 
 
 });

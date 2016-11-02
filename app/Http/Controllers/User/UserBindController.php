@@ -40,14 +40,15 @@ class UserBindController extends Controller
         try{
             $user_info=ScuplusJwc::create('Student',$sid,$spassword)->index();
         }catch (\Exception $e){
-            return $this->errorRequest(['error'=>$e->getMessage()]);
+            return $this->error($e->getMessage(),"2".$e->getCode());
         }
 
 
         if($user_info){
             $user_jwc_model=UserJwc::firstOrCreate(["uid"=>$this->_request->user()->id]);
-            $user_jwc_model->jew_id=$sid;
-            $user_jwc_model->jew_password=$sid;
+            $user_jwc_model->jwc_id=$sid;
+            $user_jwc_model->jwc_password=$sid;
+            $user_jwc_model->verify=1;
             if($user_jwc_model->save()){
                 //添加到后台更新队列当中，更新当前用户有关教务处的所有信息
                 $jwc_job=(new JwcJob($this->_request->user()))->onQueue("jwc");
@@ -56,7 +57,6 @@ class UserBindController extends Controller
             }
         }
         return $this->error('教务处绑定失败！数据库错误');
-
     }
 
     /**
