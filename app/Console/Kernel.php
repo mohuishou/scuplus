@@ -31,8 +31,19 @@ class Kernel extends ConsoleKernel
         $schedule->call(function (){
             $users=User::all();
             foreach ($users as $user){
-                dispatch(new JwcJob($user,true));
-                dispatch(new LibraryJob($user,true));
+                //判断教务处是否绑定
+                $jwc=$user->userJwc;
+                if(isset($jwc->verify)&&$jwc->verify==1){
+                    //分配到教务处更新队列
+                    dispatch(new JwcJob($user,true));
+                }
+
+                //判断图书馆是否绑定
+                $user_library=$user->userLibrary;
+                if(isset($user_library->verify)||$user_library->verify==1){
+                    //分配到图书馆更新队列
+                    dispatch(new LibraryJob($user,true));
+                }
             }
         })->dailyAt("2:00");
     }
