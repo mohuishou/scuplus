@@ -72,4 +72,21 @@ class JwcBaseController extends Controller{
             $this->init($user);
         }
     }
+
+
+
+    /**
+     * 更改教务处绑定状态
+     * @param int $status
+     * @param null $user_jwc
+     * @return bool
+     */
+    protected function verify($status=0,$user_jwc=null){
+        $user_jwc || $user_jwc=$this->_user->userJwc;
+        $user_jwc->verify=$status;
+        if($user_jwc->save()){
+            return true;
+        }
+        return false;
+    }
 }

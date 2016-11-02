@@ -254,8 +254,11 @@ EOD;
             if($e->getCode()){
                 $code="2".$e->getCode();
             }
+            if($code==24011){
+                $this->verify();
+            }
             $this->_update_return["status"]=$code;
-            $this->_update_return["msg"]="教务处账号密码错误";
+            $this->_update_return["msg"]=$e->getMessage();
             return $this->_update_return;
         }
 

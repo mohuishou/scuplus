@@ -65,7 +65,8 @@ $app->singleton(
 
  $app->routeMiddleware([
      'auth' => App\Http\Middleware\Authenticate::class,
-     'verify_code'=>App\Http\Middleware\VerifyCodeMiddleware::class
+     'verify_code'=>App\Http\Middleware\VerifyCodeMiddleware::class,
+     'jwc_verify'=> App\Http\Middleware\JwcVerifyMiddleware::class
  ]);
 
 /*

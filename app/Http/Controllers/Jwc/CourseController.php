@@ -191,7 +191,7 @@ class CourseController extends JwcBaseController{
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function update(){
-        $res=$this->dispatch(new CourseJob($this->_user->sid,decrypt($this->_user->spassword)));
+        $res=$this->dispatch(new CourseJob($this->_user->userJwc->jwc_id,decrypt($this->_user->userJwc->jwc_password)));
         if($res){
             return $this->success('课程信息更新任务已添加到后台队列！');
         }
