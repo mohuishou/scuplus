@@ -1,5 +1,5 @@
 @extends("base")
-@section("title","成绩单")
+@section("title","图书超期提醒")
 
 @section("style")
     <style>
@@ -9,21 +9,20 @@
 
 @section("content")
     <div>
-        <p>您的成绩单有更新！</p>
+        <p class="note">您有图书即将超期，一键续借，请点击登录 <a href="http://scuplus.cn/#!/user">scuplus</a></p>
         <table>
+            <caption> <b>即将超期的图书</b></caption>
             <thead>
-                <th>课程</th>
-                <th>成绩</th>
-                <th>学分</th>
-                <th>类型</th>
+                <th>书籍</th>
+                <th>作者</th>
+                <th>到期时间</th>
             </thead>
             <tbody>
-                @foreach($data as $g)
+                @foreach($data as $lib)
                     <tr>
-                        <td>{{ $g.name }}</td>
-                        <td>{{ $g.grade }}</td>
-                        <td>{{ $g.credit }}</td>
-                        <td>{{ $g.courseType }}</td>
+                        <td>{{ $lib.title }}</td>
+                        <td>{{ $lib.author }}</td>
+                        <td>{{ $lib.end_day }}</td>
                     </tr>
                 @endforeach
             </tbody>

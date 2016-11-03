@@ -241,6 +241,7 @@ EOD;
 
         $term=$this->getTerm();
         //是否存在相同学期课程数据
+        //todo:修改更新方式不要直接删除替换
         $old_schedule_data=$this->_user->schedule()->where('term',$term)->first();
         if($old_schedule_data){
             $this->_user->schedule()->where('term',$term)->delete();

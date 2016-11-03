@@ -9,7 +9,8 @@
 
 @section("content")
     <div>
-        <p>您的成绩单有更新！</p>
+        <p class="note">您的成绩单有更新,查看详细成绩/绩点，请点击登录 <a href="http://scuplus.cn/#!/grade">scuplus</a></p>
+        <caption> <b>已更新的成绩</b></caption>
         <table>
             <thead>
                 <th>课程</th>

@@ -20,6 +20,16 @@
         a:hover{
             color: #336699 !important;
         }
+        p{
+            color: #666;
+        }
+
+        #header h2{
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+
         #main{
             max-width: 900px;
             margin: auto;
@@ -39,9 +49,15 @@
             position: relative;
             zoom: 1;
         }
+
+        .note{
+            color: #666;
+            margin-bottom:50px;
+        }
         #footer{
             color: #999;
             font-size: 13px;
+            margin-top:50px;
         }
         #footer a{
             color: #999;
@@ -62,6 +78,45 @@
             }
 
         }
+
+        table {
+            background: #fff;
+            border: 1px solid #ccc;
+            width: 95%;
+            padding: 0;
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin: 0 auto;
+            font-size: 12px;
+            color: #333244;
+        }
+        table caption,
+        table tr {
+            border: 1px solid #ddd;
+            padding: 5px;
+        }
+        table td,
+        table th {
+            padding: 5px 8px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        table th {
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+
+        table caption {
+            background: #495c70;
+            color: #fff;
+            border-bottom: none;
+            font-size: 16px;
+        }
+
+        table .title {
+            border: 1px solid #ddd;
+        }
     </style>
     @yield("style")
 
@@ -71,20 +126,19 @@
     <div  class="curved_box">
         <div id="header">
             @if(isset($username))
-                <h1>尊敬的{{$username}}</h1>
+                <h2>尊敬的{{$username}}</h2>
             @else
-                <h1>尊敬的SCUPLUS用户：</h1>
+                <h2>尊敬的SCUPLUS用户：</h2>
             @endif
-
-            <p>您好!</p>
         </div>
         <div id="content">
             @yield('content')
         </div>
         <div id="footer">
             <div>
-                <p>感谢使用scuplus，川大+，加你想要</p>
-                <p>如需退订，请登录<a href="http://scuplus.cn/#!/user">scuplus个人中心</a>，关闭消息服务</p>
+                <p>SCUPLUS,一个非官方的川大功能号，送给每一个川大学子的福利</p>
+                <p>绩点/成绩/一键查询/订阅通知；考试提醒；课程表导出日历；图书超期提醒；短信/微信/邮箱/三位一体通知体系，每日自动更新</p>
+                <p>如需退订，请登录<a href="http://scuplus.cn/!#/user">scuplus个人中心</a>，关闭消息服务</p>
             </div>
             <a href="http://scuplus.cn">power by scuplus</a>
         </div>

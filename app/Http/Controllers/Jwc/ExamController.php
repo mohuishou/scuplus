@@ -51,6 +51,8 @@ class ExamController extends JwcBaseController{
         if(empty($data)){
             return $this->_update_return;
         }
+
+        //todo:判断即将考试的考试信息
         foreach ($data as $k=>$v){
             $exam_model=Exam::firstOrCreate(["uid"=>$user>id,"class_name"=>$data->class_name]);
             if($exam_model->$k!=$v){
