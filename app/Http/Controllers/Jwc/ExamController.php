@@ -25,7 +25,7 @@ class ExamController extends JwcBaseController{
         if(!$res["status"]!=1){
             return $this->error($res["msg"]);
         }
-        return $this->success("考表更新成功，更新".$res["count"]." 条考试信息",$res["data"]);
+        return $this->success("考表更新成功",$res["data"]);
     }
 
     public function updateBase(User $user)
@@ -54,7 +54,14 @@ class ExamController extends JwcBaseController{
 
         //todo:判断即将考试的考试信息,两种情况发送提醒，1:有更新,2:一周以内有考试
         foreach ($data as $k=>$v){
-            $exam_model=Exam::firstOrCreate(["uid"=>$user>id,"class_name"=>$data->class_name]);
+            //判断是否一周内有考试
+            $exam_day=strtotime($v["date"]);
+            if(($exam_day-time())<(60*60*24*7)&&($exam_day-time())>0){
+                $this->_update_return["count"]++;
+            }
+
+            //判断是否更新
+            $exam_model=Exam::firstOrCreate(["uid"=>$user->id,"class_name"=>$data["class_name"]]);
             if($exam_model->$k!=$v){
                 $exam_model->$k=$v;
                 if($exam_model->save()) $this->_update_return["count"]++;
