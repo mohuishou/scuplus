@@ -40,7 +40,7 @@ class ExamController extends JwcBaseController{
                 $code="2".$e->getCode();
             }
             if($code==24011){
-                $this->verify();
+                $this->verify(0,$user->userJwc);
             }
             $this->_update_return["status"]=$code;
             $this->_update_return["msg"]=$e->getMessage();
@@ -52,7 +52,7 @@ class ExamController extends JwcBaseController{
             return $this->_update_return;
         }
 
-        //todo:判断即将考试的考试信息
+        //todo:判断即将考试的考试信息,两种情况发送提醒，1:有更新,2:一周以内有考试
         foreach ($data as $k=>$v){
             $exam_model=Exam::firstOrCreate(["uid"=>$user>id,"class_name"=>$data->class_name]);
             if($exam_model->$k!=$v){

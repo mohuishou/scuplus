@@ -50,7 +50,7 @@ class GradeController extends JwcBaseController
                 $code="2".$e->getCode();
             }
             if($code==24011){
-                $this->verify();
+                $this->verify(0,$user->userJwc);
             }
             $this->_update_return["status"]=$code;
             $this->_update_return["msg"]=$e->getMessage();

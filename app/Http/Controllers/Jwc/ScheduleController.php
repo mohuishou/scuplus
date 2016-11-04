@@ -242,6 +242,8 @@ EOD;
         $term=$this->getTerm();
         //是否存在相同学期课程数据
         //todo:修改更新方式不要直接删除替换
+
+
         $old_schedule_data=$this->_user->schedule()->where('term',$term)->first();
         if($old_schedule_data){
             $this->_user->schedule()->where('term',$term)->delete();
@@ -256,7 +258,7 @@ EOD;
                 $code="2".$e->getCode();
             }
             if($code==24011){
-                $this->verify();
+                $this->verify(0,$user->userJwc);
             }
             $this->_update_return["status"]=$code;
             $this->_update_return["msg"]=$e->getMessage();
@@ -293,7 +295,7 @@ EOD;
     }
 
     /**
-     * 计算当前学期，例如2016.1为2016-2017学年，秋季学期 2015.2 为 2015-2016学年，春季学期
+     * 计算当前学期，例如2016.1为2016-2017学年，秋季学期 2015.2 为 2015-2016学年，春季学期   
      * @author mohuishou<1@lailin.xyz>
      * @return string
      */

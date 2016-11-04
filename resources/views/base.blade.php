@@ -138,7 +138,7 @@
             <div>
                 <p>SCUPLUS,一个非官方的川大功能号，送给每一个川大学子的福利</p>
                 <p>绩点/成绩/一键查询/订阅通知；考试提醒；课程表导出日历；图书超期提醒；短信/微信/邮箱/三位一体通知体系，每日自动更新</p>
-                <p>如需退订，请登录<a href="http://scuplus.cn/!#/user">scuplus个人中心</a>，关闭消息服务</p>
+                <p>如需退订，请登录<a href="http://scuplus.cn/#!/user">scuplus个人中心</a>，关闭消息服务</p>
             </div>
             <a href="http://scuplus.cn">power by scuplus</a>
         </div>
