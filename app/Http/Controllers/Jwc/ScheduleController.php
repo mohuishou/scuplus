@@ -213,7 +213,7 @@ EOD;
     public function update(){
 
         $res=$this->updateBase($this->_user);
-        if(!$res["status"]!=1){
+        if($res["status"]!=1){
             return $this->error($res["msg"]);
         }
         $term=$this->getTerm();
@@ -240,15 +240,6 @@ EOD;
         }
 
         $term=$this->getTerm();
-        //是否存在相同学期课程数据
-        //todo:修改更新方式不要直接删除替换
-
-
-        $old_schedule_data=$this->_user->schedule()->where('term',$term)->first();
-        if($old_schedule_data){
-            $this->_user->schedule()->where('term',$term)->delete();
-        }
-
         //获取当前所有课程
         try{
             $data=$this->_jwc_obj->notFull();
@@ -277,6 +268,13 @@ EOD;
             $map['lessonId']=$v['lessonId'];
             $course_data=Course::where($map)->get();
             foreach ($course_data as $val){
+                //查看是否该课程已存在
+                $old_data=$this->_user->schedule()->where('term',$term)->where("cid",$val["id"])->first();
+                if(isset($old_data->id)){
+                    break;
+                }
+
+                //课程不存在，新增并保存
                 $schedule_data['cid']=$val['id'];
                 $res=Schedule::create($schedule_data);
                 if($res) $this->_update_return["count"]++;

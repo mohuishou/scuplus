@@ -47,7 +47,7 @@ class UserBindController extends Controller
         if($user_info){
             $user_jwc_model=UserJwc::firstOrCreate(["uid"=>$this->_request->user()->id]);
             $user_jwc_model->jwc_id=$sid;
-            $user_jwc_model->jwc_password=$sid;
+            $user_jwc_model->jwc_password=encrypt($spassword);
             $user_jwc_model->verify=1;
             if($user_jwc_model->save()){
                 //添加到后台更新队列当中，更新当前用户有关教务处的所有信息

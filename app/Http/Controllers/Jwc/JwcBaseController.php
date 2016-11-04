@@ -62,7 +62,7 @@ class JwcBaseController extends Controller{
         if(!isset($jwc->verify)||$jwc->verify!=1){
             return $this->error("教务处未绑定，或账号密码错误！",24011);
         }
-        $id=$user->userJwc->jwcid;
+        $id=$user->userJwc->jwc_id;
         $password=decrypt($user->userJwc->jwc_password);
         $this->_user=$user;
         //初始化要操作的教务处类，默认为评教

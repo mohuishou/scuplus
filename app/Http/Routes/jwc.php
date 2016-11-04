@@ -84,7 +84,7 @@ $app->group(['prefix'=>'/jwc','middleware' => 'auth','namespace' => 'App\Http\Co
 /**
  * 需要用户登录&绑定教务处
  */
-$app->group(['namespace' => 'App\Http\Controllers\Jwc'],function () use ($app){
+$app->group(['prefix'=>'/jwc','namespace' => 'App\Http\Controllers\Jwc','middleware' => ['auth',"jwc_verify"]],function () use ($app){
 
     $app->post('/grade',[
         'as'=>'jwc.grade.update',
