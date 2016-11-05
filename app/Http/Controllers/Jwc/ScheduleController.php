@@ -202,6 +202,9 @@ EOD;
      */
     public function icsDownload($file_name){
         $path= storage_path("app/ics/".$file_name);
+        if(!file_exists($path)){
+            return $this->error("文件不存在1");
+        }
         return response()->download($path, "schedule.ics");
     }
 
