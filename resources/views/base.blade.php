@@ -125,8 +125,8 @@
 <div id="main">
     <div  class="curved_box">
         <div id="header">
-            @if(isset($username))
-                <h2>尊敬的{{$username}}</h2>
+            @if(isset($data["username"]))
+                <h2>尊敬的{{$data["username"]}}</h2>
             @else
                 <h2>尊敬的SCUPLUS用户：</h2>
             @endif
