@@ -16,7 +16,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        'App\Console\Commands\Scuplus',
     ];
 
     /**
@@ -27,6 +27,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $file_path=base_path()."/schedule.log";
         //每天凌晨两点开始更新所有用户的教务处与图书馆相关信息
         $schedule->call(function (){
             $users=User::all();
@@ -40,11 +41,12 @@ class Kernel extends ConsoleKernel
 
                 //判断图书馆是否绑定
                 $user_library=$user->userLibrary;
-                if(isset($user_library->verify)||$user_library->verify==1){
+                if(isset($user_library->verify)&&$user_library->verify==1){
                     //分配到图书馆更新队列
                     dispatch(new LibraryJob($user,true));
                 }
             }
-        })->dailyAt("2:00");
+        })->dailyAt("8:00")->appendOutputTo($file_path);
+//            ->dailyAt("2:00");
     }
 }

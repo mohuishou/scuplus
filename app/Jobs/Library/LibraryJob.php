@@ -25,7 +25,7 @@ class LibraryJob extends BaseJob
     public function handle(NowController $now,HistoryController $history)
     {
         $res=$now->updateBase($this->_user);
-        $data=$res["data"];
+        $data["args"]=$res["data"];
         $data["username"]=$this->_user->username;
         $history->updateBase($this->_user);
         if($this->_is_notify && $res["status"]==1){

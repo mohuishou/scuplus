@@ -23,7 +23,7 @@ class GradeJob extends BaseJob
     public function handle(GradeController $grade)
     {
         $res=$grade->updateBase($this->_user);
-        $data=$res["data"];
+        $data["args"]=$res["data"];
         $data["username"]=$this->_user->username;
         if($this->_is_notify && $res["status"]==1 && $res["count"]>0){
             //判断用户是否开启通知

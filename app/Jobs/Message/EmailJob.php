@@ -9,7 +9,7 @@
 namespace App\Jobs\Message;
 use App\Model\Message;
 use App\Model\User;
-use Illuminate\Mail\Mailer;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -40,14 +40,15 @@ class EmailJob extends BaseJob
     }
 
     /**
-     * @param Mailer $mailer
+     * @param Mail $mail
      */
-    public function handle(Mailer $mailer)
+    public function handle(Mail $mail)
     {
-        $mailer->send("message.".$this->_message->template_name,["data"=>$this->_args],function ($m){
-            $m->from("admin@scuplus.cn","SCUPLUS");
-            $m->to($this->_user->email)->subject('【SCUPLUS】'.$this->_message->name);
-        });
+            $mail::send("message.".$this->_message->template_name,$this->_args,function ($m){
+                $m->from("admin@scuplus.cn","SCUPLUS");
+                $m->to($this->_user->email)->subject('【SCUPLUS】'.$this->_message->name);
+            });
+
     }
 
 
