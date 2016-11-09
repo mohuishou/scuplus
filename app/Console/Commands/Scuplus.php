@@ -41,5 +41,6 @@ class Scuplus extends Command{
      */
     public function handle()
     {
+        echo "123";
     }
 }

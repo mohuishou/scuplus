@@ -82,7 +82,11 @@ class MessageJob extends BaseJob
 
     //短信通知
     protected function sms(){
-        echo "短信任务！";
-        return false;
+        if(!$this->_user->phone)
+            return false;
+        $message_model=Message::where("type",3)->where("template_name",$this->_template_name)->first();
+        $sms_job=(new SMSJob($this->_user,$message_model,$this->_args))->onQueue("message");
+        dispatch($sms_job);
+        return true;
     }
 }

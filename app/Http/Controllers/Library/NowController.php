@@ -55,7 +55,7 @@ class NowController extends  LibraryBaseController
             $v["uid"]=$uid;
             $end=strtotime($v["end_day"]);
             $rest=(time()-$end)/(60*60*24);
-            if($rest<5){
+            if($rest==5||$rest==0){
                 $this->_update_return["count"]++;
                 $this->_update_return["data"][]=$v;
             }
