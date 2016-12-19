@@ -95,10 +95,10 @@ class EvaluateController extends BaseController
         ];
         foreach ($data['info'] as $v){
             if($v['status']==1){
-                $num['not_evaluate']++;
+                $num['evaluated']++;
                 continue;
             }
-            $num['evaluated']++;
+            $num['not_evaluate']++;
             $tmp=$v;
             $tmp['verify_name']=$data['verify']['name'];
             $tmp['verify_value']=$data['verify']['value'];
