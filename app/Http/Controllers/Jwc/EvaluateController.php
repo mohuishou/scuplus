@@ -88,7 +88,12 @@ class EvaluateController extends BaseController
      */
     public function evaluateData($student_id,$password,$user_jwc_id=0){
         $this->init($student_id,$password);
-        $data=$this->_jwc_obj->index();
+        try {
+            $data=$this->_jwc_obj->index();
+        } catch (\Exception $e) {
+            return $this->error($e->getMessage(),20000);
+        }
+
         $num=[
             'evaluated'=>0,
             'not_evaluate'=>0

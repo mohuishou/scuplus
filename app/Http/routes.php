@@ -15,6 +15,11 @@ $app->get('/', function () use ($app) {
     return $app->version();
 });
 
+$app->get('/test', [
+    'as' => 'user.test',
+    'uses' => 'User\BaseController@test'
+]);
+
 $app->group(['prefix'=>'/user','namespace' => 'User'], function() use ($app) {
     $app->post('/jwc', [
         'as' => 'user.jwc',

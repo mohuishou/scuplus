@@ -22,6 +22,8 @@ use Illuminate\Support\Facades\Cache;
  */
 class BaseController extends Controller
 {
+
+
     /**
      * 创建token
      * @author mohuishou<1@lailin.xyz>
