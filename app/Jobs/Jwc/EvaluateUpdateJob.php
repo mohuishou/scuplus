@@ -37,8 +37,8 @@ class EvaluateUpdateJob extends Job
     public function handle(EvaluateController $evaluateController)
     {
         $re=$evaluateController->postEvaluate($this->_sid,$this->_password,$this->_id);
-        if (!isset($re['status'])||$re['status']!=1) {
-            $this->release(60);
-        }
+//        if (!isset($re['status'])||$re['status']!=1) {
+//            $this->release(60);
+//        }
     }
 }
