@@ -151,15 +151,17 @@ class EvaluateController extends BaseController
     //对评教失败的用户重新评教
     public function reEvaluate(){
         $users=UserJwc::all();
+        $count=0;
+        $count_job=0;
         foreach ($users as $user){
             if(!isset($user->userCheck->check)||$user->userCheck->check!=1){
+                $count++;
                 $password=decrypt($user->password);
                 $sid=$user->student_id;
-
                 $this->evaluateData($sid,$password,$user->id);
-
                 $eva_models=$user->evaluateUpdate()->where('status',0)->get();
                 if(!isset($eva_models[0])){
+                    $count_job++;
                     $eva_check_model=EvaluateCheck::firstOrCreate(['user_jwc_id'=>$user->id]);
                     $eva_check_model->check=1;
                     $eva_check_model->save();
@@ -170,9 +172,10 @@ class EvaluateController extends BaseController
                         $this->dispatch($job);
                     }
                 }
-                sleep(2);
             }
         }
+        return $this->success("{$count} 位用户的 {$count_job} 项任务成功添加到后台");
     }
+
 
 }

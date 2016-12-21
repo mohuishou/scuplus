@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Cache;
  */
 class BaseController extends Controller
 {
-
+    
 
     /**
      * 创建token

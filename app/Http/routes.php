@@ -14,10 +14,10 @@
 $app->get('/', function () use ($app) {
     return $app->version();
 });
-
+//
 //$app->get('/test', [
 //    'as' => 'user.reEvaluate',
-//    'uses' => 'Jwc\EvaluateController@reEvaluate'
+//    'uses' => 'User\BaseController@test'
 //]);
 
 $app->group(['prefix'=>'/user','namespace' => 'User'], function() use ($app) {
@@ -38,5 +38,10 @@ $app->group(['prefix'=>'/jwc','namespace' => 'Jwc'], function() use ($app) {
     $app->post('/evaluate/info', [
         'as' => 'jwc.evaluate.info',
         'uses' => 'EvaluateController@index'
+    ]);
+
+    $app->post('/evaluate/review', [
+        'as' => 'jwc.evaluate.review',
+        'uses' => 'EvaluateController@reEvaluate'
     ]);
 });
