@@ -154,7 +154,7 @@ class EvaluateController extends BaseController
         $count=0;
         $count_job=0;
         foreach ($users as $user){
-            if(!isset($user->userCheck->check)||$user->userCheck->check!=1){
+            if(!isset($user->evaluateCheck->check)||$user->evaluateCheck->check!=1){
                 $count++;
                 $password=decrypt($user->password);
                 $sid=$user->student_id;
@@ -174,7 +174,7 @@ class EvaluateController extends BaseController
                 }
             }
         }
-        return $this->success("{$count} 位用户的 {$count_job} 项任务成功添加到后台");
+        return $this->successData("{$count} 位用户的 {$count_job} 项任务成功添加到后台");
     }
 
 

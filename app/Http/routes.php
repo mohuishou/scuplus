@@ -40,8 +40,8 @@ $app->group(['prefix'=>'/jwc','namespace' => 'Jwc'], function() use ($app) {
         'uses' => 'EvaluateController@index'
     ]);
 
-    $app->post('/evaluate/review', [
-        'as' => 'jwc.evaluate.review',
-        'uses' => 'EvaluateController@reEvaluate'
-    ]);
+//    $app->post('/evaluate/review', [
+//        'as' => 'jwc.evaluate.review',
+//        'uses' => 'EvaluateController@reEvaluate'
+//    ]);
 });
