@@ -11,7 +11,9 @@ namespace App\Http\Controllers\Jwc;
 
 use App\Http\Controllers\User\UserJwcController;
 use App\Jobs\Jwc\EvaluateUpdateJob;
+use App\Models\Jwc\EvaluateCheck;
 use App\Models\Jwc\EvaluateUpdate;
+use App\Models\User\UserJwc;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -98,12 +100,8 @@ class EvaluateController extends BaseController
             'evaluated'=>0,
             'not_evaluate'=>0
         ];
+//        print_r($data);
         foreach ($data['info'] as $v){
-            if($v['status']==1){
-                $num['evaluated']++;
-                continue;
-            }
-            $num['not_evaluate']++;
             $tmp=$v;
             $tmp['verify_name']=$data['verify']['name'];
             $tmp['verify_value']=$data['verify']['value'];
@@ -113,6 +111,11 @@ class EvaluateController extends BaseController
             ]);
             $eva_model->fill($tmp);
             $eva_model->save();
+            if($v['status']==1){
+                $num['evaluated']++;
+                continue;
+            }
+            $num['not_evaluate']++;
         }
         $eva_data=EvaluateUpdate::where('user_jwc_id',$user_jwc_id)->where('status','0')->get();
         $return_data['num']=$num;
@@ -143,6 +146,31 @@ class EvaluateController extends BaseController
         }
 
         return $this->errorData($res['message']);
+    }
+
+    //对评教失败的用户重新评教
+    public function reEvaluate(){
+        $users=UserJwc::all();
+        foreach ($users as $user){
+            if(!isset($user->userCheck->check)||$user->userCheck->check!=1){
+                $password=decrypt($user->password);
+                $sid=$user->student_id;
+
+                $this->evaluateData($sid,$password,$user->id);
+
+                $eva_models=$user->evaluateUpdate()->where('status',0)->get();
+                if(!isset($eva_models[0])){
+                    $eva_check_model=EvaluateCheck::firstOrCreate(['user_jwc_id'=>$user->id]);
+                    $eva_check_model->check=1;
+                    $eva_check_model->save();
+                }
+                foreach ($eva_models as $eva_model){
+                    if($eva_model->star&&$eva_model->comment){
+                        $this->dispatch((new EvaluateUpdateJob($sid,$password,$eva_model->id))->onQueue("evaluate"));
+                    }
+                }
+            }
+        }
     }
 
 }

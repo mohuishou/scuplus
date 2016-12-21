@@ -15,10 +15,10 @@ $app->get('/', function () use ($app) {
     return $app->version();
 });
 
-$app->get('/test', [
-    'as' => 'user.test',
-    'uses' => 'User\BaseController@test'
-]);
+//$app->get('/test', [
+//    'as' => 'user.reEvaluate',
+//    'uses' => 'Jwc\EvaluateController@reEvaluate'
+//]);
 
 $app->group(['prefix'=>'/user','namespace' => 'User'], function() use ($app) {
     $app->post('/jwc', [

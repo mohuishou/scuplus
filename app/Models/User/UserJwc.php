@@ -29,4 +29,8 @@ class UserJwc extends BaseModel
         return $this->hasMany('App\Models\Jwc\EvaluateUpdate','user_jwc_id');
     }
 
+    public function evaluateCheck(){
+        return $this->hasOne('App\Models\Jwc\EvaluateCheck','user_jwc_id');
+    }
+
 }
