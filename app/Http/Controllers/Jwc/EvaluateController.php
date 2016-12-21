@@ -130,12 +130,12 @@ class EvaluateController extends BaseController
     public function postEvaluate($student_id,$password,$id){
         $this->init($student_id,$password);
         $eva_model=EvaluateUpdate::find($id);
-        try{
+//        try{
             $res=$this->_jwc_obj->evaluate($eva_model->toArray());
-        }catch (\Exception $e){
-            Log::info($e->getMessage());
-            return $this->errorData($e->getMessage(),$e->getCode());
-        }
+//        }catch (\Exception $e){
+//            Log::info($e->getMessage());
+//            return $this->errorData($e->getMessage(),$e->getCode());
+//        }
         if($res['status']){
             $eva_model->status=1;
             $eva_model->save();
