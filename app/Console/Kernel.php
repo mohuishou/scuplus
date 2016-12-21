@@ -26,10 +26,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call(function (){
-            $eva_update=new EvaluateController();
-            $eva_update->reEvaluate();
-            Log::info("评教复查开始！");
-        })->everyThirtyMinutes();
+//        $schedule->call(function (){
+//            $eva_update=new EvaluateController();
+//            $eva_update->reEvaluate();
+//            Log::info("评教复查开始！");
+//        })->everyThirtyMinutes();
     }
 }
