@@ -166,9 +166,11 @@ class EvaluateController extends BaseController
                 }
                 foreach ($eva_models as $eva_model){
                     if($eva_model->star&&$eva_model->comment){
-                        $this->dispatch((new EvaluateUpdateJob($sid,$password,$eva_model->id))->onQueue("evaluate"));
+                        $job=(new EvaluateUpdateJob($sid,$password,$eva_model->id))->onQueue("evaluate");
+                        $this->dispatch($job);
                     }
                 }
+                sleep(2);
             }
         }
     }

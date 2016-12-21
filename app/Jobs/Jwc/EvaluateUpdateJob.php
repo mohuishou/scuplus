@@ -38,7 +38,7 @@ class EvaluateUpdateJob extends Job
     {
         $re=$evaluateController->postEvaluate($this->_sid,$this->_password,$this->_id);
         if (!isset($re['status'])||$re['status']!=1) {
-            $this->release(10);
+            $this->release(60);
         }
     }
 }
