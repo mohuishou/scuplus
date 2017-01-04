@@ -22,5 +22,8 @@ class Course extends BaseModel
     public function item(){
         return $this->hasMany('App\Models\Jwc\CourseItem','cid');
     }
-  
+
+    public function extend(){
+        return $this->hasOne('App\Models\Jwc\CourseExtend','cid');
+    }
 }

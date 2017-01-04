@@ -9,6 +9,7 @@
 namespace App\Console\Commands\Conversion;
 
 use App\Models\Jwc\Course;
+use App\Models\Jwc\CourseExtend;
 use App\Models\Jwc\CourseItem;
 use App\Models\Jwc\CourseTeacher;
 use Illuminate\Console\Command;
@@ -46,30 +47,28 @@ class CourseConversion extends Command
      */
     public function handle()
     {
-        $course_items=CourseItem::all();
+        $start=time();
+        $courses=Course::all();
         $count=0;
-        foreach ($course_items as $course_item){
-            $course_model=Course::firstOrCreate([
-                'course_id'=>$course_item->courseId,
-                'lesson_id'=>$course_item->lessonId
+        foreach ($courses as $course){
+            $course_extend=CourseExtend::firstOrCreate([
+                "cid"=>$course->id
             ]);
-            $course_model->save();
+            $item=$course->item->first();
 
-            $course_item->cid=$course_model->id;
-            $course_item->save();
+            $course_extend->college=$item->college;
+            $course_extend->name=$item->name;
+            $course_extend->credit=$item->credit;
+            $course_extend->exam_type=$item->examType;
+            $course_extend->max=$item->max;
+            $course_extend->student_number=$item->studentNumber;
+            $course_extend->course_limit=$item->courseLimit;
 
-            $teachers=$course_item->teacher;
-            foreach ($teachers as $teacher){
-                $course_teacher_model=CourseTeacher::firstOrCreate([
-                    'cid'=>$course_model->id,
-                    'tid'=>$teacher->id
-                ]);
-                $course_teacher_model->save();
-            }
+            $course_extend->save();
 
             $count++;
         }
-        $msg="执行完毕，转移数据{$count}条 \r\n";
+        $msg="执行完毕，转移数据{$count}条,耗时".(time()-$start)."秒\r\n";
         echo $msg;
         Log::info($msg);
     }

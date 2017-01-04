@@ -11,9 +11,9 @@ namespace App\Models\Jwc;
 
 use App\Models\BaseModel;
 
-class CourseItem extends BaseModel
+class CourseExtend extends BaseModel
 {
-    protected $table='jwc_course_item';
+    protected $table='jwc_course_extend';
 
     public function course(){
         return $this->belongsTo('App\Models\Jwc\Course','cid');
