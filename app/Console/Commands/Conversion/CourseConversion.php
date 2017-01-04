@@ -8,8 +8,9 @@
 
 namespace App\Console\Commands\Conversion;
 
-use App\Jobs\Conversion\UserConversionJob;
-use App\Models\Conversion\GpaUser;
+use App\Models\Jwc\Course;
+use App\Models\Jwc\CourseItem;
+use App\Models\Jwc\CourseTeacher;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -45,17 +46,32 @@ class CourseConversion extends Command
      */
     public function handle()
     {
+        $course_items=CourseItem::all();
+        $count=0;
+        foreach ($course_items as $course_item){
+            $course_model=Course::firstOrCreate([
+                'course_id'=>$course_item->courseId,
+                'lesson_id'=>$course_item->lessonId
+            ]);
+            $course_model->save();
 
-        $users = GpaUser::all();
-        $i = 0;
-        foreach ($users as $user) {
-            dispatch(new UserConversionJob($user));
-            $i++;
+            $course_item->cid=$course_model->id;
+            $course_item->save();
+
+            $teachers=$course_item->teacher;
+            foreach ($teachers as $teacher){
+                $course_teacher_model=CourseTeacher::firstOrCreate([
+                    'cid'=>$course_model->id,
+                    'tid'=>$teacher->id
+                ]);
+                $course_teacher_model->save();
+            }
+
+            $count++;
         }
-        $msg = "成功添加 {$i} 条数据到后台转换队列 \r\n";
+        $msg="执行完毕，转移数据{$count}条 \r\n";
         echo $msg;
         Log::info($msg);
-
     }
 
 }

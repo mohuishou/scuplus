@@ -15,5 +15,11 @@ class CourseItem extends BaseModel
 {
     protected $table='jwc_course_item';
 
+    public function course(){
+        return $this->belongsTo('App\Models\Jwc\Course','cid');
+    }
 
+    public function teacher(){
+        return $this->belongsToMany('App\Models\Jwc\Teacher','course_teacher','cid','tid');
+    }
 }

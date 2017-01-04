@@ -15,5 +15,12 @@ class Teacher extends BaseModel
 {
     protected $table='jwc_teacher';
 
+    public function course(){
+        return $this->belongsToMany('App\Models\Jwc\Teacher','jwc_course_teacher','cid','tid');
+    }
+
+    public function courseItem(){
+        return $this->belongsToMany('App\Models\Jwc\Teacher','course_teacher','cid','tid');
+    }
   
 }

@@ -13,7 +13,14 @@ use App\Models\BaseModel;
 
 class Course extends BaseModel
 {
-    protected $table='jwc_course_item';
+    protected $table='jwc_course';
 
+    public function teacher(){
+        return $this->belongsToMany('App\Models\Jwc\Teacher','jwc_course_teacher','cid','tid');
+    }
+
+    public function item(){
+        return $this->hasMany('App\Models\Jwc\CourseItem','cid');
+    }
   
 }
