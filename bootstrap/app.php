@@ -1,7 +1,7 @@
 <?php
 
 require_once __DIR__.'/../vendor/autoload.php';
-
+require_once  __DIR__.'/../app/helpers.php';
 try {
     (new Dotenv\Dotenv(__DIR__.'/../'))->load();
 } catch (Dotenv\Exception\InvalidPathException $e) {
@@ -95,6 +95,14 @@ $app->singleton(
 
 $app->group(['namespace' => 'App\Http\Controllers'], function ($app) {
     require __DIR__.'/../app/Http/routes.php';
+});
+
+/**
+*/
+$app->configureMonologUsing(function(Monolog\Logger $monolog) use ($app) {
+    return $monolog->pushHandler(
+        new \Monolog\Handler\RotatingFileHandler($app->storagePath().'/logs/lumen.log')
+    );
 });
 
 return $app;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use Laravel\Lumen\Routing\Controller as BaseController;
 
 class Controller extends BaseController
@@ -13,6 +14,7 @@ class Controller extends BaseController
      * @return \Laravel\Lumen\Http\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function errorRequest($msg,$code=10000){
+        Log::info($msg);
         return response()->json([
             "status"=>0,
             "msg"=>$msg,
@@ -22,6 +24,7 @@ class Controller extends BaseController
 
 
     public function error($msg,$code=10000){
+        Log::info($msg);
         return response()->json([
             "status"=>0,
             "msg"=>$msg,
@@ -53,6 +56,7 @@ class Controller extends BaseController
      * @return array
      */
     public function errorData($msg,$code=10000){
+        Log::info($msg);
         $data=[
             "status"=>0,
             "msg"=>$msg,

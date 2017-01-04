@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        'App\Console\Commands\ScuplusEvaluate'
     ];
 
     /**
@@ -33,4 +33,5 @@ class Kernel extends ConsoleKernel
 //            Log::info($res['msg']);
 //        })->hourly();
     }
+    
 }

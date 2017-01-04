@@ -21,6 +21,13 @@ class EvaluateController extends BaseController
 {
     protected $_jwc_name='Evaluate';
 
+    /**
+     * 获取评教信息
+     * @author mohuishou<1@lailin.xyz>
+     * @param Request $request
+     * @param UserJwcController $userJwcController
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function index(Request $request,UserJwcController $userJwcController){
         //字段验证，学号，密码
         $this->validate($request,[
@@ -37,16 +44,50 @@ class EvaluateController extends BaseController
 
         //验证用户
         $res=$userJwcController->show($sid,$password,1);
-
         //验证失败，返回错误
         if(!$res['status']){
             return $this->apiReturn($res);
         }
-
         //抓取评教信息
         $data=$this->evaluateData($sid,$password,$res['data']['user_jwc_id']);
         $data['token']=$res['data']['token'];
         return $this->success('获取成功',$data);
+    }
+
+    public function show($sid,$password,UserJwcController $userJwcController){
+        //验证用户
+        $res=$userJwcController->show($sid,$password,1);
+        //验证失败，返回错误
+        if(!$res['status']){
+            return $res;
+        }
+        //抓取评教信息
+        $data=$this->evaluateData($sid,$password,$res['data']['user_jwc_id']);
+        $data['token']=$res['data']['token'];
+
+        $this->_jwc_obj->logout();
+        return $this->successData('获取成功',$data);
+    }
+
+    /**
+     * 从教务处抓取已评教信息
+     * @author mohuishou<1@lailin.xyz>
+     * @param EvaluateUpdate $eva_model
+     * @return array
+     */
+    public function updateEvaluateData(EvaluateUpdate $eva_model){
+        try{
+            $data=$this->_jwc_obj->getEvaluateData($eva_model->toArray());
+        }catch (\Exception $e){
+            return $this->errorData($e->getMessage(),'2'.$e->getCode());
+        }
+        $eva_model->star=$data['star'];
+        $eva_model->comment=$data['comment'];
+        if($eva_model->save()){
+            return $this->successData("更新成功！");
+        }else{
+            return $this->errorData("更新失败");
+        }
     }
 
     /**
@@ -84,6 +125,7 @@ class EvaluateController extends BaseController
     }
 
     /**
+     * 抓取评教信息
      * @author mohuishou<1@lailin.xyz>
      * @param $student_id
      * @param $password
@@ -93,14 +135,13 @@ class EvaluateController extends BaseController
         try {
             $data=$this->_jwc_obj->index();
         } catch (\Exception $e) {
-            return $this->error($e->getMessage(),20000);
+            return $this->errorData($e->getMessage(),20000);
         }
 
         $num=[
             'evaluated'=>0,
             'not_evaluate'=>0
         ];
-//        print_r($data);
         foreach ($data['info'] as $v){
             $tmp=$v;
             $tmp['verify_name']=$data['verify']['name'];
@@ -112,6 +153,8 @@ class EvaluateController extends BaseController
             $eva_model->fill($tmp);
             $eva_model->save();
             if($v['status']==1){
+                //抓取已评教的信息
+                $this->updateEvaluateData($eva_model);
                 $num['evaluated']++;
                 continue;
             }
@@ -124,6 +167,7 @@ class EvaluateController extends BaseController
     }
 
     /**
+     * 提交评教信息
      * @author mohuishou<1@lailin.xyz>
      * @param $student_id
      * @param $password
@@ -148,7 +192,11 @@ class EvaluateController extends BaseController
         return $this->errorData($res['message']);
     }
 
-    //对评教失败的用户重新评教
+    /**
+     * 重新评教
+     * @author mohuishou<1@lailin.xyz>
+     * @return array
+     */
     public function reEvaluate(){
         $users=UserJwc::all();
         $count=0;
@@ -176,6 +224,8 @@ class EvaluateController extends BaseController
         }
         return $this->successData("{$count} 位用户的 {$count_job} 项任务成功添加到后台");
     }
+
+
 
 
 }
