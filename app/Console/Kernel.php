@@ -15,7 +15,9 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        'App\Console\Commands\Conversion\CourseConversion'
+        'App\Console\Commands\Conversion\CourseConversion',
+        'App\Console\Commands\CourseUpdate',
+        'App\Console\Commands\Temp'
     ];
 
     /**

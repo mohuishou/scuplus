@@ -10,8 +10,6 @@ namespace App\Console\Commands\Conversion;
 
 use App\Models\Jwc\Course;
 use App\Models\Jwc\CourseExtend;
-use App\Models\Jwc\CourseItem;
-use App\Models\Jwc\CourseTeacher;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 

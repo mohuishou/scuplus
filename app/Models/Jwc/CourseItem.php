@@ -19,4 +19,8 @@ class CourseItem extends BaseModel
         return $this->belongsTo('App\Models\Jwc\Course','cid');
     }
 
+    public function teacher(){
+        return $this->belongsToMany('App\Models\Jwc\Teacher','course_teacher','cid','tid');
+    }
+
 }
