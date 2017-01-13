@@ -127,34 +127,34 @@ class CourseUpdateJob extends Job
     }
 
     protected function courseExtend($cid,$data,CourseExtend $courseExtend){
-        $courseExtend->firstOrCreate(['cid'=>$cid]);
-        $courseExtend->update($data);
-        $courseExtend->save();
-        return $courseExtend->id;
+        $model=$courseExtend->firstOrCreate(['cid'=>$cid]);
+        $model->update($data);
+        $model->save();
+        return $model->id;
     }
 
     protected function courseItem($cid,$data,CourseItem $courseItem){
-        $courseItem->firstOrCreate(['cid'=>$cid]);
-        $courseItem->update($data);
-        $courseItem->save();
-        return $courseItem->id;
+        $model=$courseItem->firstOrCreate(['cid'=>$cid]);
+        $model->update($data);
+        $model->save();
+        return $model->id;
     }
 
     protected function teacher($teacher_name,$college,Teacher $teacher){
-        $teacher->firstOrCreate([
+        $model=$teacher->firstOrCreate([
             'name'=>$teacher_name,
             'college'=>$college
         ]);
-        $teacher->save();
-        return $teacher->id;
+        $model->save();
+        return $model->id;
     }
 
     protected function courseTeacher($cid,$tid,CourseTeacher $courseTeacher){
-        $courseTeacher->firstOrCreate([
+        $model=$courseTeacher->firstOrCreate([
             'cid'=>$cid,
             'tid'=>$tid
         ]);
-        $courseTeacher->save();
-        return $courseTeacher->id;
+        $model->save();
+        return $model->id;
     }
 }

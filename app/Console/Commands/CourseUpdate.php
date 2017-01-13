@@ -45,7 +45,7 @@ class CourseUpdate extends Command
     public function handle(UserJwc $userJwc)
     {
         $page_number=$this->argument('page_number');
-        $users=$userJwc->where('verify',1)->take($page_number)->get();
+        $users=$userJwc->where('verify',1)->where('id','>',200)->take($page_number)->get();
         for ($i=1;$i<=$page_number;$i++){
             $user=$users[$i-1];
             dispatch(new CourseUpdateJob($user->student_id,decrypt($user->password),$i));

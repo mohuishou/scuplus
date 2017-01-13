@@ -17,8 +17,16 @@ use App\Models\User\UserJwc;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Class EvaluateController
+ * @author mohuishou <1@lailin.xyz>
+ * @package App\Http\Controllers\Jwc
+ */
 class EvaluateController extends BaseController
 {
+    /**
+     * @var string
+     */
     protected $_jwc_name='Evaluate';
 
     /**
@@ -54,6 +62,13 @@ class EvaluateController extends BaseController
         return $this->success('获取成功',$data);
     }
 
+    /**
+     * @author mohuishou<1@lailin.xyz>
+     * @param $sid
+     * @param $password
+     * @param UserJwcController $userJwcController
+     * @return array
+     */
     public function show($sid,$password,UserJwcController $userJwcController){
         //验证用户
         $res=$userJwcController->show($sid,$password,1);
